@@ -1,0 +1,5 @@
+You didn't specify a single class... or maybe you did a typo?
+I only saw one class. What kind of underachiever are you? Try again, buddy.
+Okay... two classes isn't alot. I don't reeeeeaaaaally believe you though. Maybe there's a typo?
+Seriously? {0} classes? Does the school even allow that? Try again, maybe I read something wrong.
+I've refreshed your schedule {0}

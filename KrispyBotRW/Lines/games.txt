@@ -1,0 +1,12 @@
+Be sure to add "PC" or "Console" to your request.
+Oh great! You play Paladins? I never knew. I'm a little curious on what you play it on.
+Sad to see you leave Paladins... I just want to know on which platform.
+Sooo... you play Brawlhalla? But on what?
+Brawlhalla says bye bye. But where? On your desktop monitor or your TV screen?
+Heh. You play Fortnite? That's interesting. Quick question: What do you play it on?
+Okay. Not playing Fortnite anymore? Are you not playing it on your Desktop or Console?
+Sneaky... I'll just pretend I didn't see that.
+You play {0}? I never knew. Here, I'll add that role for you.
+Nice! I've added those games to your role list if you don't mind.
+Sad to see you leave {0}. Here, I'll remove that role from you.
+Well, I've removed those games from your role list.

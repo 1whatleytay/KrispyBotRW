@@ -1,0 +1,16 @@
+Here's what I know I can do (as long as you prefix it with `@Krispy Bot#8270`):
+ ```
+ [help] - Lists all comm- okay why do people even write this here?
+ [plays] <game/games> - Adds a game to your role list (you will be notified when someone mentions the group).
+ [nplays] <game/games> - Removes a game from your role list.
+ [schedule] <classes> - Resets your role to match your schedule, postfix your classes at the end of the command.
+ [nickname] <new nickname> - Resets your server nickname.
+ [nsfw] - Opt into the NSFW channel. Beware, you won't be able to undo this (unless you ask a mod)!
+ [vote] <mention/name/nickname> - If followed by a name, nickname or mention, votes for someone.
+ ```
+ Hey, that's about all I know, but I'm working on it, okay?
+ Try to speak to me generally, if I say I don't know what you're talking about, just remember I'm just a bot.
+ 
+ Have an idea for a command? Go bother `@desgroup#0675` and he'll add it.
+ 
+ Kyle, I'm working on the dad features. Just... gimme a sec.

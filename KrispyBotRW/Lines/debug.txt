@@ -1,0 +1,2 @@
+I've printed what you just said to the console {0}
+Krispy Bot RW {0}.{1}.{2}
