@@ -15,7 +15,9 @@ namespace KrispyBotRW {
         }
 
         [Command("error")]
-        public async Task ThrowError() { throw new Exception(KrispyGenerator.GenerateBeeps()); }
+        public Task ThrowError() {
+            throw new Exception(KrispyGenerator.GenerateBeeps());
+        }
         
         [Command("version")]
         public async Task Version() {
