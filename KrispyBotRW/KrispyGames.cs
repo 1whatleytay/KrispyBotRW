@@ -27,14 +27,8 @@ namespace KrispyBotRW {
                     return null;
                 }
             }
-            if (games.Contains("fortnite")) {
-                if (isPc) roles.Add(Context.Guild.GetRole(409731024692576275));
-                if (isConsole) roles.Add(Context.Guild.GetRole(409773834347216911));
-                if (!isPc && !isConsole) {
-                    await ReplyAsync(KrispyLines.Games[isPlaying ? 5 : 6] + KrispyLines.Games[0]);
-                    return null;
-                }
-            }
+            if (games.Contains("fortnite"))
+                roles.Add(Context.Guild.GetRole(430116935724826636));
             if (games.Contains("lol") || games.Contains("league") || games.Contains("legends"))
                 roles.Add(Context.Guild.GetRole(409730970556694538));
             if (games.Contains("admin")) await ReplyAsync(KrispyLines.Games[7]);
