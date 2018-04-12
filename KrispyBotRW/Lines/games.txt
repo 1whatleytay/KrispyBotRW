@@ -10,3 +10,4 @@ You play {0}? I never knew. Here, I'll add that role for you.
 Nice! I've added those games to your role list if you don't mind.
 Sad to see you leave {0}. Here, I'll remove that role from you.
 Well, I've removed those games from your role list.
+You didn't specify a single game... try again?

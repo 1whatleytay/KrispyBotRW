@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 
 using Discord;
 using Discord.Commands;
@@ -19,9 +20,10 @@ namespace KrispyBotRW {
 
         public static async Task<bool> Fun(DiscordSocketClient client, SocketMessage msg, int msgLoc) {
             var text = msg.ToString().Substring(msgLoc);
-            if (text.Contains("hi"))
+            var components = text.Split(" ");
+            if (components.Contains("hi"))
                 await msg.Channel.SendMessageAsync("Hello " + KrispyGenerator.PickLine(KrispyLines.Emoticon));
-            else if (text.Contains("hello"))
+            else if (components.Contains("hello"))
                 await msg.Channel.SendMessageAsync("Hi " + KrispyGenerator.PickLine(KrispyLines.Emoticon));
             else return false;
             return true;
