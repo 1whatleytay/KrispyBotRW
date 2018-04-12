@@ -23,7 +23,7 @@ namespace KrispyBotRW {
         [Command("probe")]
         public async Task Probe() {
             var builder = new StringBuilder();
-            foreach (var role in Context.Client.GetGuild(378337310074339348).Roles)
+            foreach (var role in Context.Guild.Roles)
                 builder.Append(role.Name.PadRight(30) + " " + role.Id + "\n");
             await ReplyAsync("```\n" + builder.ToString() + "\n```");
         }
