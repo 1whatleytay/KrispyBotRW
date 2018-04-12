@@ -42,7 +42,9 @@ namespace KrispyBotRW {
             if (schedule.Contains("geo"))     roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Geo]));
             if (schedule.Contains("sci"))     roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Science]));
             if (schedule.Contains("tech"))    roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Tech]));
-            if (schedule.Contains("phys"))    roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.PhysEd]));
+            if (schedule.Contains("phys") ||
+                schedule.Contains("pys") ||
+                schedule.Contains("gym"))     roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.PhysEd]));
             if (schedule.Contains("eng"))     roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.English]));
             if (schedule.Contains("french"))  roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.French]));
             if (schedule.Contains("strings")) roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Strings]));
