@@ -45,6 +45,7 @@ namespace KrispyBotRW {
         [Command("plays")]
         public async Task AddGames([Remainder] string games) {
             var gameRoles = await GetGameRoles(games);
+            if (gameRoles == null) return;
             switch (gameRoles.Count) {
                 case 0:
                     await ReplyAsync(KrispyLines.Games[12]);
@@ -63,6 +64,7 @@ namespace KrispyBotRW {
         [Command("nplays")]
         public async Task RemoveGames([Remainder] string games) {
             var gameRoles = await GetGameRoles(games, false);
+            if (gameRoles == null) return;
             switch (gameRoles.Count) {
                 case 0:
                     await ReplyAsync(KrispyLines.Games[12]);
