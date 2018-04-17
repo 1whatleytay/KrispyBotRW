@@ -25,6 +25,12 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("Hello " + KrispyGenerator.PickLine(KrispyLines.Emoticon));
             else if (components.Contains("hello"))
                 await msg.Channel.SendMessageAsync("Hi " + KrispyGenerator.PickLine(KrispyLines.Emoticon));
+            else if (text.Contains("what") && (components.Contains("time") ||
+                                               components.Contains("day") ||
+                                               components.Contains("date")))
+                await msg.Channel.SendMessageAsync("It is February " +
+                                                   (int) (DateTime.Now - new DateTime(2018, 2, 1)).TotalDays +
+                                                   ", 2018.");
             else return false;
             return true;
         }
