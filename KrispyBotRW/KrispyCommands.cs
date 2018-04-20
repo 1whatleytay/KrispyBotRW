@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Text;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -17,6 +17,22 @@ namespace KrispyBotRW {
 
         [Command("help")]
         public async Task Help() { await ReplyAsync(KrispyLines.Help); }
+        
+        [Command("big")]
+        public async Task Big([Remainder] string text) {
+            text = text.ToLower();
+            var endText = new StringBuilder();
+            foreach (var c in text)
+                if (c >= 'a' && c <= 'z')
+                    endText.Append(":regional_indicator_" + c + ":");
+                else if (c == '?')
+                    endText.Append(":question:");
+                else if (c == '!')
+                    endText.Append(":exclamation:");
+                else
+                    endText.Append(c);
+            await ReplyAsync(endText.ToString());
+        }
 
         public static async Task<bool> Fun(DiscordSocketClient client, SocketMessage msg, int msgLoc) {
             var text = msg.ToString().Substring(msgLoc);
@@ -31,6 +47,8 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("It is February " +
                                                    (int) (DateTime.Now - new DateTime(2018, 2, 1)).TotalDays +
                                                    ", 2018.");
+            else if (text.Contains("donut") || text.Contains("doughnut"))
+                await msg.Channel.SendMessageAsync(":doughnut:");
             else return false;
             return true;
         }
