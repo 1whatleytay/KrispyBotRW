@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Discord;
 using Discord.Commands;
@@ -17,18 +18,39 @@ namespace KrispyBotRW {
 
         [Command("help")]
         public async Task Help() { await ReplyAsync(KrispyLines.Help); }
+
+        private static string DigitName(char name) {
+            switch (name) {
+                case '0': return "zero";
+                case '1': return "one";
+                case '2': return "two";
+                case '3': return "three";
+                case '4': return "four";
+                case '5': return "five";
+                case '6': return "six";
+                case '7': return "seven";
+                case '8': return "eight";
+                case '9': return "nine";
+                default: return "hmm"; // not sure how you'd trigger this but why not
+            }
+        }
         
         [Command("big")]
         public async Task Big([Remainder] string text) {
+            await Context.Message.DeleteAsync();
             text = text.ToLower();
             var endText = new StringBuilder();
             foreach (var c in text)
                 if (c >= 'a' && c <= 'z')
                     endText.Append(":regional_indicator_" + c + ":");
+                else if (c >= '0' && c <= '9')
+                    endText.Append(":" + DigitName(c) + ":");
                 else if (c == '?')
                     endText.Append(":question:");
                 else if (c == '!')
                     endText.Append(":exclamation:");
+                else if (c == '.')
+                    endText.Append(":record_button:");
                 else
                     endText.Append(c);
             await ReplyAsync(endText.ToString());
@@ -47,8 +69,12 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("It is February " +
                                                    (int) (DateTime.Now - new DateTime(2018, 2, 1)).TotalDays +
                                                    ", 2018.");
-            else if (text.Contains("donut") || text.Contains("doughnut"))
+            else if (components.Contains("donut") || components.Contains("doughnut"))
                 await msg.Channel.SendMessageAsync(":doughnut:");
+            else if (components.Contains("mispell"))
+                await msg.Channel.SendMessageAsync("I mean... that's how I spelled it. That's not actually right.");
+            else if (components.Contains("misspell"))
+                await msg.Channel.SendMessageAsync("Correct! Good job... Here's a doughnut: :doughnut:.");
             else return false;
             return true;
         }

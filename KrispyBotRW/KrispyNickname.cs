@@ -7,6 +7,14 @@ using Discord.Commands;
 
 namespace KrispyBotRW {
     public class KrispyNickname : ModuleBase<SocketCommandContext> {
+        public static string FirstName(string nickname) {
+            return nickname.Substring(0, nickname.IndexOf('|')).Trim();
+        }
+
+        public static string NickName(string nickname) {
+            return nickname.Substring(nickname.IndexOf('|') + 1).Trim();
+        }
+        
         [Command("nickname")]
         public async Task NewNickname([Remainder] string nickname) {
             var user = (IGuildUser) Context.User;

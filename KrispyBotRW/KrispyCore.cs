@@ -41,8 +41,12 @@ namespace KrispyBotRW {
                 var context = new SocketCommandContext(_client, userMsg);
                 var result = await _commands.ExecuteAsync(context, pos, _services);
                 if (!result.IsSuccess) {
-                    if (result.Error == CommandError.UnknownCommand)
-                        await context.Channel.SendMessageAsync(KrispyGenerator.PickLine(KrispyLines.Unknown));
+                    if (result.Error == CommandError.UnknownCommand) {
+                        var chosenLine = KrispyLines.Unknown[57];//KrispyGenerator.PickLine(KrispyLines.Unknown);
+                        if (chosenLine.Contains("{0}")) chosenLine =
+                            string.Format(chosenLine, KrispyNickname.FirstName(((IGuildUser)msg.Author).Nickname));
+                        await context.Channel.SendMessageAsync(chosenLine);
+                    }
                     else
                         await context.Channel.SendMessageAsync(
                             (KrispyGenerator.Odds(10) ? "Oof. Doublé. Not a fan." : "Hehehe... We've hit an error!")
