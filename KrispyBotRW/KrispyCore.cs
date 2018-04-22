@@ -42,7 +42,7 @@ namespace KrispyBotRW {
                 var result = await _commands.ExecuteAsync(context, pos, _services);
                 if (!result.IsSuccess) {
                     if (result.Error == CommandError.UnknownCommand) {
-                        var chosenLine = KrispyLines.Unknown[57];//KrispyGenerator.PickLine(KrispyLines.Unknown);
+                        var chosenLine = KrispyGenerator.PickLine(KrispyLines.Unknown);
                         if (chosenLine.Contains("{0}")) chosenLine =
                             string.Format(chosenLine, KrispyNickname.FirstName(((IGuildUser)msg.Author).Nickname));
                         await context.Channel.SendMessageAsync(chosenLine);
