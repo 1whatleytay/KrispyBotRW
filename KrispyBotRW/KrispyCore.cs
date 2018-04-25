@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Diagnostics;
+using System.Timers;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 
 using Discord;
@@ -13,17 +12,26 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace KrispyBotRW {
     public class KrispyCore {
-        public const int VersionMajor = 0, VersionMinor = 1, Revision = 0;
+        public const int VersionMajor = 0, VersionMinor = 2, Revision = 1;
         
         private readonly DiscordSocketClient _client = new DiscordSocketClient();
         private readonly CommandService _commands = new CommandService();
         private IServiceProvider _services;
+        
+        private readonly Timer _statusUpdates = new Timer { Interval = 10 * 60 * 60 * 1000 };
 
         private string _token;
-
+        
         private static Task Log(LogMessage msg) {
             Console.WriteLine(msg.Message);
             return Task.CompletedTask;
+        }
+
+        
+        private async void UpdateStatus(object sender, ElapsedEventArgs args) {
+            if (!KrispyGenerator.Odds(4)) return;
+            var result = new KrispyStatusLine();
+            await _client.SetGameAsync(result.status, null, result.type);
         }
 
         private async Task CheckMessage(SocketMessage msg) {
@@ -53,7 +61,7 @@ namespace KrispyBotRW {
                             + "\n```\n" + result.ErrorReason + "\n```");
                 }
             }
-        } 
+        }
 
         private async Task KrispyAsync() {
             _services = new ServiceCollection()
@@ -76,6 +84,9 @@ namespace KrispyBotRW {
             await _client.LoginAsync(TokenType.Bot, _token);
             await _client.StartAsync();
 
+            _statusUpdates.Elapsed += UpdateStatus;
+            _statusUpdates.Enabled = true;
+            
             await Task.Delay(-1);
         }
         
