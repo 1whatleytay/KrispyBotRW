@@ -16,6 +16,7 @@ namespace KrispyBotRW {
         public static readonly string[] Schedule = File.ReadAllLines("Lines/schedule.txt");
         public static readonly string[] Games = File.ReadAllLines("Lines/games.txt");
         public static readonly string[] Debug = File.ReadAllLines("Lines/debug.txt");
+        public static readonly string[] Votes = File.ReadAllLines("Lines/votes.txt");
 
         public static readonly string Help = File.ReadAllText("Lines/help.txt");
         public static readonly string NSFW = File.ReadAllText("Lines/nsfw.txt");
@@ -25,6 +26,10 @@ namespace KrispyBotRW {
             var newName = nameWords.Aggregate("",
                 (current, nameWord) => current + nameWord.First().ToString().ToUpper() + nameWord.Substring(1) + " ");
             return newName.Trim();
+        }
+
+        public static string Emojify(string name) {
+            return name.ToLower().Replace(" ", "-").Replace(@"\s+", "");
         }
     }
 

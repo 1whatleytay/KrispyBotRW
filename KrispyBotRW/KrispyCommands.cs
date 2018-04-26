@@ -1,15 +1,21 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
+using System.Net.NetworkInformation;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
 namespace KrispyBotRW {
     public class KrispyCommands : ModuleBase<SocketCommandContext> {
+        public static bool UserIsKrispyAdmin(SocketUser user) {
+            return ((IGuildUser) user).RoleIds.Contains(378339275189518336ul);
+        }
+        
         [Command("shutdown")]
         public async Task Shutdown() {
             await Context.Client.StopAsync();
@@ -75,6 +81,16 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("I mean... that's how I spelled it. That's not actually right.");
             else if (components.Contains("misspell"))
                 await msg.Channel.SendMessageAsync("Correct! Good job... Here's a doughnut: :doughnut:.");
+            else if (components.Contains("inspire")) {
+                string inspiroBotUrl;
+                var request = (HttpWebRequest)WebRequest.Create("http://inspirobot.me/api?generate=true&oy=vey");
+                using (var response = (HttpWebResponse)request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream)) {
+                    inspiroBotUrl = reader.ReadToEnd();
+                }
+                await msg.Channel.SendMessageAsync(inspiroBotUrl);
+            }
             else return false;
             return true;
         }
