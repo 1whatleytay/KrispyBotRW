@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Timers;
 using System.Reflection;
@@ -22,12 +23,16 @@ namespace KrispyBotRW {
 
         private string _token;
         
+        public delegate void KrispyMessageCallback(SocketMessage message, object userData);
+
+        public readonly Dictionary<ulong, KrispyMessageCallback> UserCallbacks =
+            new Dictionary<ulong, KrispyMessageCallback>();
+        
         private static Task Log(LogMessage msg) {
             Console.WriteLine(msg.Message);
             return Task.CompletedTask;
         }
 
-        
         private async void UpdateStatus(object sender, ElapsedEventArgs args) {
             if (!KrispyGenerator.Odds(4)) return;
             var result = new KrispyStatusLine();
@@ -36,6 +41,10 @@ namespace KrispyBotRW {
 
         private async Task CheckMessage(SocketMessage msg) {
             if (!(msg is SocketUserMessage userMsg)) return;
+
+            if (UserCallbacks.ContainsKey(msg.Author.Id)) {
+                UserCallbacks[msg.Author.Id](msg, null);
+            }
 
             int mentionPos = 0, charPos = 0;
             bool passMention = false, passChar = false;
