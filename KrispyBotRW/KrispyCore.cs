@@ -19,7 +19,7 @@ namespace KrispyBotRW {
         private readonly CommandService _commands = new CommandService();
         private IServiceProvider _services;
         
-        private readonly Timer _statusUpdates = new Timer { Interval = 10 * 60 * 60 * 1000 };
+        private readonly Timer _statusUpdates = new Timer { Interval = 10 * 60 * 1000 };
 
         private string _token;
         
@@ -34,6 +34,7 @@ namespace KrispyBotRW {
         }
 
         private async void UpdateStatus(object sender, ElapsedEventArgs args) {
+            await ((IMessageChannel) _client.GetChannel(378337613087637505)).SendMessageAsync("Boop! Adjusting status...");
             if (!KrispyGenerator.Odds(4)) return;
             var result = new KrispyStatusLine();
             await _client.SetGameAsync(result.status, null, result.type);
