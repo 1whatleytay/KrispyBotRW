@@ -34,7 +34,6 @@ namespace KrispyBotRW {
         }
 
         private async void UpdateStatus(object sender, ElapsedEventArgs args) {
-            await ((IMessageChannel) _client.GetChannel(378337613087637505)).SendMessageAsync("Boop! Adjusting status...");
             if (!KrispyGenerator.Odds(4)) return;
             var result = new KrispyStatusLine();
             await _client.SetGameAsync(result.status, null, result.type);
