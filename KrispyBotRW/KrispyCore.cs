@@ -45,6 +45,8 @@ namespace KrispyBotRW {
             if (UserCallbacks.ContainsKey(msg.Author.Id)) {
                 UserCallbacks[msg.Author.Id](msg, null);
             }
+            
+            KrispyContributions.ProcessMessage(msg);
 
             int mentionPos = 0, charPos = 0;
             bool passMention = false, passChar = false;

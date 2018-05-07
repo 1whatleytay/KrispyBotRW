@@ -116,8 +116,10 @@ namespace KrispyBotRW {
         
         [Command("show-profile")]
         public async Task ShowProfile(SocketUser user) {
-            if (!KrispyCommands.UserIsKrispyAdmin(Context.User))
+            if (!KrispyCommands.UserIsKrispyAdmin(Context.User)) {
                 await ReplyAsync("Sorry, only admins can use this command.");
+                return;
+            }
             var ccands = candidates.Candidates(user.Id);
             var cvotes = candidates.Votes(user.Id);
             var maxVotesDesc = profiles.ContainsKey(user.Id)
@@ -149,8 +151,10 @@ namespace KrispyBotRW {
 
         [Command("clean-profile")]
         public async Task CleanProfile(SocketUser user) {
-            if (!KrispyCommands.UserIsKrispyAdmin(Context.User))
+            if (!KrispyCommands.UserIsKrispyAdmin(Context.User)) {
                 await ReplyAsync("Sorry, only admins can use this command.");
+                return;
+            }
             if (profiles.ContainsKey(user.Id)) profiles.Remove(user.Id);
             candidates.RemoveUser(user.Id);
             await ReplyAsync("User " + user.Username + "#" + user.Discriminator + " successfully cleaned!");
@@ -158,8 +162,10 @@ namespace KrispyBotRW {
 
         [Command("grant-vote")]
         public async Task GrantVote(SocketUser user) {
-            if (!KrispyCommands.UserIsKrispyAdmin(Context.User))
+            if (!KrispyCommands.UserIsKrispyAdmin(Context.User)) {
                 await ReplyAsync("Sorry, only admins can use this command.");
+                return;
+            }
             if (profiles.ContainsKey(user.Id)) profiles[user.Id].CustomMaxVotes++;
             else profiles.Add(user.Id, new UserProfile { CustomMaxVotes = MaxVotes + 1 });
             await ReplyAsync("Granted vote to " + user.Username + "#" + user.Discriminator + ".");
@@ -167,8 +173,10 @@ namespace KrispyBotRW {
 
         [Command("grant-submission")]
         public async Task GrantSubmission(SocketUser user) {
-            if (!KrispyCommands.UserIsKrispyAdmin(Context.User))
+            if (!KrispyCommands.UserIsKrispyAdmin(Context.User)) {
                 await ReplyAsync("Sorry, only admins can use this command.");
+                return;
+            }
             if (profiles.ContainsKey(user.Id)) profiles[user.Id].CustomMaxSubmissions++;
             else profiles.Add(user.Id, new UserProfile { CustomMaxSubmissions = MaxSubmissions + 1 });
             await ReplyAsync("Granted submission to " + user.Username + "#" + user.Discriminator + ".");
@@ -182,8 +190,8 @@ namespace KrispyBotRW {
             }
             var candidate = candidates[voteId];
             if (candidate.Enabled) {
-                //if (candidate.Poster.Id == Context.User.Id) await ReplyAsync("Hey... you can't vote for yourself!");
-                //else {
+                if (candidate.Poster.Id == Context.User.Id) await ReplyAsync("Hey... you can't vote for yourself!");
+                else {
                     var cvotes = profiles.ContainsKey(Context.User.Id)
                         ? profiles[Context.User.Id].CustomMaxVotes
                         : MaxVotes;
@@ -193,7 +201,7 @@ namespace KrispyBotRW {
                         candidate.Votes.Add((IGuildUser)Context.User);
                         await ReplyAsync("I counted your vote!");
                     }
-                //}
+                }
             } else await ReplyAsync("Sorry! This post has been deleted.");
         }
         

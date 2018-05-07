@@ -38,7 +38,10 @@ namespace KrispyBotRW {
             if (games.Contains("player") || games.Contains("unknown") ||
                 games.Contains("battlegrounds") || games.Contains("pubg"))
                 roles.Add(Context.Guild.GetRole(433825483558354957));
-            if (games.Contains("admin")) await ReplyAsync(KrispyLines.Games[7]);
+            if (games.Contains("admin")) {
+                await ReplyAsync(KrispyLines.Games[7]);
+                return null;
+            }
             return roles;
         }
         
