@@ -63,7 +63,7 @@ namespace KrispyBotRW {
         }
 
         public static async Task<bool> Fun(DiscordSocketClient client, SocketMessage msg, int msgLoc) {
-            var text = msg.ToString().Substring(msgLoc);
+            var text = msg.ToString().ToLower().Substring(msgLoc);
             var components = text.Split(" ");
             if (components.Contains("hi"))
                 await msg.Channel.SendMessageAsync("Hello " + KrispyGenerator.PickLine(KrispyLines.Emoticon));
@@ -75,6 +75,8 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("It is February " +
                                                    (int) (DateTime.Now - new DateTime(2018, 2, 1)).TotalDays +
                                                    ", 2018.");
+           else if (text.Contains("what") || components.Contains("love"))
+                await msg.Channel.SendMessageAsync("Baby don't hurt me.");
             else if (components.Contains("donut") || components.Contains("doughnut"))
                 await msg.Channel.SendMessageAsync(":doughnut:");
             else if (components.Contains("mispell"))
@@ -90,6 +92,11 @@ namespace KrispyBotRW {
                     inspiroBotUrl = reader.ReadToEnd();
                 }
                 await msg.Channel.SendMessageAsync(inspiroBotUrl);
+            }
+            else if (components.Contains("bitch"))
+                await msg.Channel.SendMessageAsync("Look who's talking.");
+            else if (components.Contains("ur") && components.Contains("mom") && components.Contains("gay")) {
+                await msg.Channel.SendMessageAsync("no u");
             }
             else return false;
             return true;

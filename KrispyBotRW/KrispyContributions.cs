@@ -86,10 +86,15 @@ namespace KrispyBotRW {
 
         [Command("leaderboard")]
         public async Task ShowLeaderboard() {
-            if (!KrispyCommands.UserIsKrispyAdmin(Context.User))
+            if (!KrispyCommands.UserIsKrispyAdmin(Context.User)) {
                 await ReplyAsync("Sorry, only admins can use this command.");
+                return;
+            }
             var builder = new StringBuilder("```\n");
-            foreach (var profile in profiles.Values) {
+            var profileValues = new ContributionProfile[profiles.Values.Count];
+            profiles.Values.CopyTo(profileValues, 0);
+            Array.Sort(profileValues, (x, y) => y.GetScore() - x.GetScore());
+            foreach (var profile in profileValues) {
                 var user = Context.Client.GetUser(profile.UserId);
                 if (user == null) continue;
                 builder.Append(

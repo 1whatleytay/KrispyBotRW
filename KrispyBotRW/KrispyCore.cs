@@ -13,7 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace KrispyBotRW {
     public class KrispyCore {
-        public const int VersionMajor = 0, VersionMinor = 2, Revision = 1;
+        public const int VersionMajor = 0, VersionMinor = 3, Revision = 0;
         
         private readonly DiscordSocketClient _client = new DiscordSocketClient();
         private readonly CommandService _commands = new CommandService();
