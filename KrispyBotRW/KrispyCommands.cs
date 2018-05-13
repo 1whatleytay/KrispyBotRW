@@ -75,7 +75,7 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("It is February " +
                                                    (int) (DateTime.Now - new DateTime(2018, 2, 1)).TotalDays +
                                                    ", 2018.");
-           else if (text.Contains("what") || components.Contains("love"))
+           else if (text.Contains("what") && components.Contains("love"))
                 await msg.Channel.SendMessageAsync("Baby don't hurt me.");
             else if (components.Contains("donut") || components.Contains("doughnut"))
                 await msg.Channel.SendMessageAsync(":doughnut:");
