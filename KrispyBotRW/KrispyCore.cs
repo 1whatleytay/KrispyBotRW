@@ -97,7 +97,6 @@ namespace KrispyBotRW {
 
             _statusUpdates.Elapsed += UpdateStatus;
             _statusUpdates.Enabled = true;
-            
             await Task.Delay(-1);
         }
         
