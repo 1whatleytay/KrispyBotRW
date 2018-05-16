@@ -99,33 +99,6 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("Look who's talking.");
             else if (components.Contains("ur") && components.Contains("mom") && components.Contains("gay"))
                 await msg.Channel.SendMessageAsync("no u");
-            else if (components.Contains("open")) {
-                if (msg.Author.Id == 199158747904475136)
-                    switch (currentPresentI++) {
-                        case 0:
-                            await msg.Channel.SendMessageAsync("*You find a balloon. I think you can wear it on your head.*\nGo ahead, put it on :balloon::tophat:");
-                            await msg.Channel.SendMessageAsync("There's one more present left...");
-                            break;
-                        case 1:
-                            await msg.Channel.SendMessageAsync("*You find an empty salt container. There's a note beside it with \"for all your league of legends games.\" written on it.*");
-                            await msg.Channel.SendMessageAsync("I realize these presents were pretty awful (and not really real but I mean), and I'm sorry... I'm not really great at giving out presents. But anyway, hope you have a happy birthday!");
-                            break;
-                        default:
-                            await msg.Channel.SendMessageAsync("I didn't get you more than two presents... how much money do you think I have?");
-                            break;
-                    }
-                else if (msg.Author.Id == 271076385009696769)
-                    switch (currentPresentJ++) {
-                        case 0:
-                            await msg.Channel.SendMessageAsync("*You find a roomba. Another one to add to your collection, I guess.*");
-                            await msg.Channel.SendMessageAsync("More cute cat pictures please :)");
-                            break;
-                        default:
-                            await msg.Channel.SendMessageAsync("That was your only present... sorry it took a while for the roomba to ship.");
-                            break;
-                    }
-                else await msg.Channel.SendMessageAsync("Hey... leave the presents for the birthday boy, okay?");
-            }
             else return false;
             return true;
         }
