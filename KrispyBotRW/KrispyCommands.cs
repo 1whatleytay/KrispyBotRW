@@ -99,9 +99,9 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("Look who's talking.");
             else if (components.Contains("ur") && components.Contains("mom") && components.Contains("gay"))
                 await msg.Channel.SendMessageAsync("no u");
-            else if (components.Contains("open") && msg.Author.Id == 271076385009696769 && currentPresentJ++ == 0)
-                await msg.Channel.SendMessageAsync("There isn't anything here. Stop trying to open your present. Just give me some space for a few days and we'll be okay. You can delete this message.");
-            else return false;
+            else if (components.Contains("open") && currentPresentJ++ == 0) {
+                await msg.Channel.SendMessageAsync("There isn't anything here. Stop trying to open your present.");
+            } else return false;
             return true;
         }
     }
