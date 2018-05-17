@@ -68,8 +68,7 @@ namespace KrispyBotRW {
                     }
                     else
                         await context.Channel.SendMessageAsync(
-                            (KrispyGenerator.Odds(10) ? "Oof. Doublé. Not a fan." : "Hehehe... We've hit an error!")
-                            + "\n```\n" + result.ErrorReason + "\n```");
+                            "Hehehe... We've hit an error!\n```\n" + result.ErrorReason + "\n```");
                 }
             }
         }
