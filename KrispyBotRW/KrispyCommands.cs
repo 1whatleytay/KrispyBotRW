@@ -99,8 +99,10 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("Look who's talking.");
             else if (components.Contains("ur") && components.Contains("mom") && components.Contains("gay"))
                 await msg.Channel.SendMessageAsync("no u");
-            else if (components.Contains("open") && currentPresentJ++ == 0) {
-                await msg.Channel.SendMessageAsync("There isn't anything here. Stop trying to open your present.");
+            else if (components.Contains("open") && msg.Author.Id == 308333042085265409 && currentPresentJ++ == 0) {
+                await msg.Channel.SendMessageAsync("You find a note inside your present that says: \"Happa Biruthda Ethman!\"");
+                KrispyContributions.SendPoints(308333042085265409, 100);
+                await msg.Channel.SendMessageAsync("*You got 100 points :)*");
             } else return false;
             return true;
         }
