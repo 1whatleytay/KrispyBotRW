@@ -71,6 +71,7 @@ namespace KrispyBotRW {
         }
 
         public static async Task DadJokes(SocketMessage msg) {
+            // Dad jokes are fun
             if (!dadJokesEnabled) return;
             var messageText = msg.Content.ToLower() + " ";
             bool iAm = messageText.Contains("i am"), imA = messageText.Contains("i'm"), im = messageText.Contains("im");
