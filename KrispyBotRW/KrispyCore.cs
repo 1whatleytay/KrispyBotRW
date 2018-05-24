@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Timers;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using Discord;
@@ -45,6 +47,9 @@ namespace KrispyBotRW {
             if (UserCallbacks.ContainsKey(msg.Author.Id)) {
                 UserCallbacks[msg.Author.Id](msg, null);
             }
+
+
+            KrispyCommands.DadJokes(msg);
             
             KrispyContributions.ProcessMessage(msg);
 
@@ -96,6 +101,21 @@ namespace KrispyBotRW {
 
             _statusUpdates.Elapsed += UpdateStatus;
             _statusUpdates.Enabled = true;
+            
+//            System.Threading.Thread.Sleep(4000);
+//
+//            var krispy = _client.GetGuild(378337310074339348);
+//
+//            foreach (var user in krispy.Users) {
+//                if (user.IsBot) continue;
+//                var dms = await user.GetOrCreateDMChannelAsync();
+//                dms.GetMessagesAsync(10 + 1).ForEach(x => {
+//                    foreach (var a in x) {
+//                        Console.WriteLine(a.Author + ": " + a.Content);
+//                    }
+//                });
+//            }
+//            
             await Task.Delay(-1);
         }
         

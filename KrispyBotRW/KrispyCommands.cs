@@ -61,8 +61,26 @@ namespace KrispyBotRW {
                     endText.Append(c);
             await ReplyAsync(endText.ToString());
         }
+
+        private static bool dadJokesEnabled = true;
         
-        private static int currentPresentJ = 0;
+        [Command("dad-jokes")]
+        public async Task DadJokes(bool state) {
+            dadJokesEnabled = state;
+            await ReplyAsync("Dad Jokes: " + (state ? "Enabled!" : "Disabled!"));
+        }
+
+        public static async Task DadJokes(SocketMessage msg) {
+            if (!dadJokesEnabled) return;
+            var messageText = msg.Content.ToLower() + " ";
+            bool iAm = messageText.Contains("i am"), imA = messageText.Contains("i'm"), im = messageText.Contains("im");
+            if ((iAm || imA || im) && !msg.Author.IsBot) {
+                var firstStr = iAm ? "i am" : (imA ? "i'm" : "im");
+                int beg = messageText.IndexOf(firstStr) + firstStr.Length + 1, last = messageText.IndexOf(' ', beg);
+                msg.Channel.SendMessageAsync("Hi, " + messageText.Substring(beg, last - beg) +
+                                             ". I'm dad.");
+            }
+        }
 
         public static async Task<bool> Fun(DiscordSocketClient client, SocketMessage msg, int msgLoc) {
             var text = msg.ToString().ToLower().Substring(msgLoc);
