@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -15,7 +15,10 @@ namespace KrispyBotRW {
                 if (isPc) roles.Add(Context.Guild.GetRole(409730824146124800));
                 if (isConsole) roles.Add(Context.Guild.GetRole(409730879775047701));
                 if (!isPc && !isConsole) {
-                    await ReplyAsync(KrispyLines.Games[isPlaying ? 1 : 2] + " " + KrispyLines.Games[0]);
+                    await ReplyAsync((isPlaying ?
+                        "Oh great! You play Paladins? I never knew. I'm a little curious on what you play it on." :
+                        "Sad to see you leave Paladins... I just want to know on which platform.") +
+                                     " Be sure to add \"PC\" or \"Console\" to your request.");
                     return null;
                 }
             }
@@ -23,7 +26,10 @@ namespace KrispyBotRW {
                 if (isPc) roles.Add(Context.Guild.GetRole(409731094817275905));
                 if (isConsole) roles.Add(Context.Guild.GetRole(409773879343579137));
                 if (!isPc && !isConsole) {
-                    await ReplyAsync(KrispyLines.Games[isPlaying ? 3 : 4] + " " + KrispyLines.Games[0]);
+                    await ReplyAsync((isPlaying ?
+                        "Sooo... you play Brawlhalla? But on what?" :
+                        "Brawlhalla says bye bye. But where? On your desktop monitor or your TV screen?") +
+                                     " Be sure to add \"PC\" or \"Console\" to your request.");
                     return null;
                 }
             }
@@ -38,8 +44,10 @@ namespace KrispyBotRW {
             if (games.Contains("player") || games.Contains("unknown") ||
                 games.Contains("battlegrounds") || games.Contains("pubg"))
                 roles.Add(Context.Guild.GetRole(433825483558354957));
+            if (games.Contains("dec"))
+                roles.Add(Context.Guild.GetRole(452965439916605440));
             if (games.Contains("admin")) {
-                await ReplyAsync(KrispyLines.Games[7]);
+                await ReplyAsync("Sneaky... I'll just pretend I didn't see that.");
                 return null;
             }
             return roles;
@@ -51,15 +59,15 @@ namespace KrispyBotRW {
             if (gameRoles == null) return;
             switch (gameRoles.Count) {
                 case 0:
-                    await ReplyAsync(KrispyLines.Games[12]);
+                    await ReplyAsync("You didn't specify a single game... try again?");
                     break;
                 case 1:
                     await ((IGuildUser)Context.User).AddRoleAsync(gameRoles[0]);
-                    await ReplyAsync(string.Format(KrispyLines.Games[8], gameRoles[0].Name));
+                    await ReplyAsync("You play " + gameRoles[0].Name + "? I never knew. Here, I'll add that role for you.");
                     break;
                 default:
                     await ((IGuildUser)Context.User).AddRolesAsync(gameRoles);
-                    await ReplyAsync(KrispyLines.Games[9]);
+                    await ReplyAsync("Nice! I've added those games to your role list if you don't mind.");
                     break;
             }
         }
@@ -70,15 +78,15 @@ namespace KrispyBotRW {
             if (gameRoles == null) return;
             switch (gameRoles.Count) {
                 case 0:
-                    await ReplyAsync(KrispyLines.Games[12]);
+                    await ReplyAsync("You didn't specify a single game... try again?");
                     break;
                 case 1:
                     await ((IGuildUser) Context.User).RemoveRoleAsync(gameRoles[0]);
-                    await ReplyAsync(string.Format(KrispyLines.Games[10], gameRoles[0].Name));
+                    await ReplyAsync(string.Format("Sad to see you leave {0}. Here, I'll remove that role from you.", gameRoles[0].Name));
                     break;
                 default:
                     await ((IGuildUser) Context.User).RemoveRolesAsync(gameRoles);
-                    await ReplyAsync(KrispyLines.Games[11]);
+                    await ReplyAsync("Well, I've removed those games from your role list.");
                     break;
             }
         }

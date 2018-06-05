@@ -62,7 +62,7 @@ namespace KrispyBotRW {
             await ReplyAsync(endText.ToString());
         }
 
-        private static bool dadJokesEnabled = true;
+        private static bool dadJokesEnabled;
         
         [Command("dad-jokes")]
         public async Task DadJokes(bool state) {
@@ -78,8 +78,21 @@ namespace KrispyBotRW {
             if ((iAm || imA || im) && !msg.Author.IsBot) {
                 var firstStr = iAm ? "i am" : (imA ? "i'm" : "im");
                 int beg = messageText.IndexOf(firstStr) + firstStr.Length + 1, last = messageText.IndexOf(' ', beg);
-                msg.Channel.SendMessageAsync("Hi, " + messageText.Substring(beg, last - beg) +
+                await msg.Channel.SendMessageAsync("Hi, " + messageText.Substring(beg, last - beg) +
                                              ". I'm dad.");
+            }
+        }
+
+        private static readonly Emoji thumbsUp = new Emoji("👍"), thumbsDown = new Emoji("👎");
+
+        public static async Task MonitorMessages(SocketMessage msg) {
+            await DadJokes(msg);
+            KrispyContributions.ProcessMessage(msg);
+
+            if (msg.Channel.Id == 434090042408042506) {
+                var eventMessage = (SocketUserMessage)msg;
+                eventMessage.AddReactionAsync(thumbsUp);
+                eventMessage.AddReactionAsync(thumbsDown);
             }
         }
 

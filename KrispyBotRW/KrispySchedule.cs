@@ -37,6 +37,7 @@ namespace KrispyBotRW {
         
         [Command("schedule")]
         public async Task Reschedule([Remainder] string schedule) {
+            schedule = schedule.ToLower();
             var roles = new List<SocketRole>();
             if (schedule.Contains("math"))    roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Math]));
             if (schedule.Contains("geo"))     roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Geo]));
@@ -58,16 +59,18 @@ namespace KrispyBotRW {
 
             switch (roles.Count) {
                 case 0:
-                    await ReplyAsync(KrispyLines.Schedule[0]);
+                    await ReplyAsync("You didn't specify a single class... or maybe you did a typo?");
                     break;
                 case 1:
-                    await ReplyAsync(KrispyLines.Schedule[1]);
+                    await ReplyAsync("I only saw one class. What kind of underachiever are you? Try again, buddy.");
                     break;
                 case 2:
-                    await ReplyAsync(KrispyLines.Schedule[2]);
+                    await ReplyAsync("Okay... two classes isn't alot. I don't reeeeeaaaaally believe you though. Maybe there's a typo?");
                     break;
                 default:
-                    if (roles.Count > 5) await ReplyAsync(string.Format(KrispyLines.Schedule[2], roles.Count));
+                    if (roles.Count > 5) await ReplyAsync(
+                        "Seriously? " + roles.Count + " classes? Does the school even allow that? Try again, maybe I read something wrong."
+                        );
                     else {
                         var discardRoles = new List<SocketRole>();
                         foreach (var removeId in _classes)
@@ -75,8 +78,7 @@ namespace KrispyBotRW {
                                 if (roleId == removeId) discardRoles.Add(Context.Guild.GetRole(removeId));
                         await ((IGuildUser)Context.User).RemoveRolesAsync(discardRoles);
                         await ((IGuildUser)Context.User).AddRolesAsync(roles);
-                        await ReplyAsync(string.Format(KrispyLines.Schedule[4],
-                            KrispyGenerator.PickLine(KrispyLines.Emoticon)));
+                        await ReplyAsync("I've refreshed your schedule " + KrispyGenerator.PickLine(KrispyLines.Emoticon));
                     }
                     break;
             }

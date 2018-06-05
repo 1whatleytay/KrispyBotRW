@@ -36,8 +36,8 @@ namespace KrispyBotRW {
                 
                 FullEmbed = new EmbedBuilder()
                     .WithColor(Color.Red)
-                    .WithTitle(string.Format(KrispyLines.Votes[3], KrispyNickname.FirstName(Poster.Nickname)))
-                    .WithDescription(string.Format(KrispyLines.Votes[5].Replace("\\n", "\n"), Name, Index, Time))
+                    .WithTitle("New Submission By: " + KrispyNickname.FirstName(Poster.Nickname))
+                    .WithDescription("Name: " + Name + "\nVote Id: " + Index + "\nSubmitted at: " + Time)
                     .WithImageUrl(Url)
                     .Build();
             }
@@ -209,12 +209,12 @@ namespace KrispyBotRW {
         public async Task Vote(string emojiName) { await Vote(candidates.At(emojiName)); }
 
         [Command("submit")]
-        public async Task Submit() { await ReplyAsync(KrispyLines.Votes[7]); }
+        public async Task Submit() { await ReplyAsync("You might want to add a name to your submission. Use `@Krispy Bot submit <name>` and attach your image."); }
 
         [Command("submit")]
         public async Task Submit([Remainder] string emojiName) {
             if (Context.Message.Attachments.Count < 1)
-                await ReplyAsync(KrispyLines.Votes[1]);
+                await ReplyAsync("... you didn't submit anything. Try again, but upload an image. I don't think you can paste links either.");
             else {
                 var cmaxSubmissions = (profiles.ContainsKey(Context.User.Id)
                     ? profiles[Context.User.Id].CustomMaxSubmissions
@@ -237,7 +237,7 @@ namespace KrispyBotRW {
                         var poster = submission.Poster.Id == Context.User.Id
                             ? "You"
                             : KrispyNickname.FirstName(submission.Poster.Nickname);
-                        await ReplyAsync(string.Format(KrispyLines.Votes[6], poster));
+                        await ReplyAsync("Sorry. " + poster + " already posted a submission with the same name. Try another name!");
                     }
                 }
             }

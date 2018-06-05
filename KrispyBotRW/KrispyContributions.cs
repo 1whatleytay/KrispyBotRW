@@ -37,11 +37,6 @@ namespace KrispyBotRW {
         private static readonly Dictionary<ulong, ContributionProfile> profiles
             = new Dictionary<ulong, ContributionProfile>();
 
-        public static void SendPoints(ulong user, int points) {
-            if (!profiles.ContainsKey(user)) profiles.Add(user, new ContributionProfile(user));
-            profiles[user].GiftPoints(points);
-        }
-
         private static readonly ulong[] blockedChannels = {
             378337613087637505, // #bot-commands
             423902578217189377, // #duckhunt

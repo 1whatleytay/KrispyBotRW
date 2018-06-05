@@ -1,0 +1,13 @@
+{0} attacks {2} to {1}.
+{0} manages to swing his sword {2}.
+{0} throws a branch at {1} {2}.
+{0} throws a bowling ball {2}.
+{0} gazes longingly at {1}, {2}.
+{0} does {3} intense dabs.
+{0} rampages, landing {3} hits.
+{0} bitchslaps {1} {2}.
+{0} does {3} lunges.
+{0} repeats Pounces and Nine Lives {2}.
+{0} throws {3} axes.
+{0} strikes {1} with lighting {2}!
+{0} throws {3} maeve blades.

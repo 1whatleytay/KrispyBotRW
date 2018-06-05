@@ -10,9 +10,7 @@ namespace KrispyBotRW {
         [Command("dummy")]
         public async Task Dummy([Remainder] string text) {
             Console.WriteLine(text);
-            await ReplyAsync(
-                string.Format(KrispyLines.Debug[0], 
-                    KrispyGenerator.PickLine(KrispyLines.Emoticon)));
+            await ReplyAsync("Ditto " + KrispyGenerator.PickLine(KrispyLines.Emoticon));
         }
 
         [Command("error")]
@@ -30,9 +28,8 @@ namespace KrispyBotRW {
         
         [Command("version")]
         public async Task Version() {
-            await ReplyAsync(
-                string.Format(KrispyLines.Debug[1],
-                    KrispyCore.VersionMajor, KrispyCore.VersionMinor, KrispyCore.Revision));
+            await ReplyAsync("Hi :D I'm Krispy Bot (RW)™ version: " +
+                             KrispyCore.VersionMajor + "." + KrispyCore.VersionMinor + "." + KrispyCore.Revision);
         }
     }
 }

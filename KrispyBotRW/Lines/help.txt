@@ -12,5 +12,3 @@ Here's what I know I can do (as long as you prefix it with `@Krispy Bot#8270`):
  Try to speak to me generally, if I say I don't know what you're talking about, just remember I'm just a bot.
  
  Have an idea for a command? Go bother `@desgroup#0675` and he'll add it.
- 
- Kyle, I'm working on the dad features. Just... gimme a sec.

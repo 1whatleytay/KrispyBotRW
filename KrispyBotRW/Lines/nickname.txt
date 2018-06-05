@@ -1,2 +1,0 @@
-That's a long nickname. Try to keep it under {0} characters.
-I changed your nickname {0}

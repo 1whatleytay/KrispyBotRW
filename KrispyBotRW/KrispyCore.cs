@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Timers;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using Discord;
@@ -21,14 +20,13 @@ namespace KrispyBotRW {
         private readonly CommandService _commands = new CommandService();
         private IServiceProvider _services;
         
-        private readonly Timer _statusUpdates = new Timer { Interval = 10 * 60 * 1000 };
+        private readonly Timer _statusUpdates = new Timer { Interval = 10 * 60 * 1000, Enabled = true };
+        //private readonly Timer _ninjaUpdates = new Timer { Interval = 5000, Enabled = true };
+        //private readonly Timer _healUpdates = new Timer { Interval = 100000, Enabled = true };
 
         private string _token;
         
         public delegate void KrispyMessageCallback(SocketMessage message, object userData);
-
-        public readonly Dictionary<ulong, KrispyMessageCallback> UserCallbacks =
-            new Dictionary<ulong, KrispyMessageCallback>();
         
         private static Task Log(LogMessage msg) {
             Console.WriteLine(msg.Message);
@@ -41,17 +39,13 @@ namespace KrispyBotRW {
             await _client.SetGameAsync(result.status, null, result.type);
         }
 
+        //private static void UpdateNinjas(object sender, ElapsedEventArgs args) { Ninja.KrispyNinjas.AdvanceGames(); }
+        //private static void UpdateHeals(object sender, ElapsedEventArgs args) { Ninja.KrispyNinjas.RestoreHP(); }
+        
         private async Task CheckMessage(SocketMessage msg) {
             if (!(msg is SocketUserMessage userMsg)) return;
 
-            if (UserCallbacks.ContainsKey(msg.Author.Id)) {
-                UserCallbacks[msg.Author.Id](msg, null);
-            }
-
-
-            KrispyCommands.DadJokes(msg);
-            
-            KrispyContributions.ProcessMessage(msg);
+            KrispyCommands.MonitorMessages(msg);
 
             int mentionPos = 0, charPos = 0;
             bool passMention = false, passChar = false;
@@ -100,22 +94,9 @@ namespace KrispyBotRW {
             await _client.StartAsync();
 
             _statusUpdates.Elapsed += UpdateStatus;
-            _statusUpdates.Enabled = true;
+            //_ninjaUpdates.Elapsed += UpdateNinjas;
+            //_healUpdates.Elapsed += UpdateHeals;
             
-//            System.Threading.Thread.Sleep(4000);
-//
-//            var krispy = _client.GetGuild(378337310074339348);
-//
-//            foreach (var user in krispy.Users) {
-//                if (user.IsBot) continue;
-//                var dms = await user.GetOrCreateDMChannelAsync();
-//                dms.GetMessagesAsync(10 + 1).ForEach(x => {
-//                    foreach (var a in x) {
-//                        Console.WriteLine(a.Author + ": " + a.Content);
-//                    }
-//                });
-//            }
-//            
             await Task.Delay(-1);
         }
         

@@ -1,8 +1,0 @@
-There isn't an active vote at the moment :(
-... you didn't submit anything. Try again, but upload an image. I don't think you can paste links either.
-You've already exhausted all your votes!
-New Submission By: {0}
-{0} by {1} ({2})
-Name: {0}\nVote Id: {1}\nSubmitted at: {2}
-Sorry. {0} already posted a submission with the same name. Try another name!
-You might want to add a name to your submission. Use `@Krispy Bot submit <name>` and attach your image.
