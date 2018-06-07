@@ -19,30 +19,8 @@ namespace KrispyBotRW.Ninja {
         public NinjaLevel Level;
         public NinjaSkills Skills = new NinjaSkills();
         public string ChallengeMessage;
-        
-        public bool InGame;
 
-        public class NinjaSkills : List<NinjaSkill> {
-            public int CheckForSkill(int skill) {
-                for (var a = 0; a < Count; a++)
-                    if (this[a].BaseSkill.Id == skill) return a;
-                return -1;
-            }
-
-            public int CheckForLevel(int skill) {
-                var skillIndex = CheckForSkill(skill);
-                if (skillIndex == -1) return -1;
-                return this[skillIndex].Level;
-            }
-            
-            public int AddNewSkill() {
-                var baseSkill = NinjaSkillBase.Random();
-                var skillLoc = CheckForSkill(baseSkill.Id);
-                if (skillLoc == -1) Add(new NinjaSkill(baseSkill));
-                else if (this[skillLoc].Level == 3) this[skillLoc].Level++;
-                return skillLoc;
-            }
-        }
+        public NinjaGame Game;
 
         private void CheckLevelIncreases(IMessageChannel battleChannel) {
             var nextLevel = NinjaLevel.Levels[Level.Number + 1];
@@ -82,22 +60,24 @@ namespace KrispyBotRW.Ninja {
                 (didWin ? 8 : 3) *
                 Math.Max(opponentLevel - Level.Number, 0) * 5
                 + 2 * lengthOfBattle - MaxStamina, 5) + KrispyGenerator.NumberBetween(5, 25);
-            Console.WriteLine(exp);
             IncreaseStats(exp / 10);
             ExpLevel += exp;
             CheckLevelIncreases(battleChannel);
             Console.WriteLine("Exp: " + ExpLevel);
         }
         
-        public void Restore() {
-            CurrentHP = Math.Min(Math.Max(CurrentHP, 0), MaxHP);
-            CurrentHP += MaxHP / 2;
+        public void EndGame() {
+            CurrentHP = Math.Min(Math.Max(CurrentHP + MaxHP / 2, 0), MaxHP);
             CurrentStamina = MaxStamina;
-            InGame = false;
+            Skills.ResetSkillData();
+            Game = null;
         }
 
         public Embed CreateEmbed(DiscordSocketClient client) {
             var user = client.GetUser(UserId);
+            var skillDisplay = Skills.Count > 0 ? "Skills:\n" : "";
+            foreach (var skill in Skills)
+                skillDisplay += skill.BaseSkill.Name + " " + skill.GetLevelText() + "\n";
             return new EmbedBuilder()
                 .WithColor(Color.DarkBlue)
                 .WithTitle(user.Username + "#" + user.Discriminator + "'s Ninja")
@@ -106,13 +86,14 @@ namespace KrispyBotRW.Ninja {
                                  "HP: " + CurrentHP + "/" + MaxHP + "\n" +
                                  "Stamina: " + MaxStamina + "\n" +
                                  "Damage: " + HitMinimum + " - " + HitMaximum + "\n" +
-                                 "Speed: " + Speed)
+                                 "Speed: " + Speed + "\n" +
+                                 skillDisplay)
                 .Build();
         }
         
         public static readonly Dictionary<ulong, NinjaProfile> Profiles = new Dictionary<ulong, NinjaProfile>() {
             {414619400742633493, new NinjaProfile(414619400742633493) {
-                Level = NinjaLevel.Levels[7],
+                Level = NinjaLevel.Levels[11],
                 MaxHP = 900, CurrentHP = 900,
                 MaxStamina = 50, CurrentStamina = 50,
                 HitMinimum = 50, HitMaximum = 70,

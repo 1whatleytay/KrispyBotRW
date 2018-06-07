@@ -21,10 +21,11 @@ namespace KrispyBotRW {
         private IServiceProvider _services;
         
         private readonly Timer _statusUpdates = new Timer { Interval = 10 * 60 * 1000, Enabled = true };
-        //private readonly Timer _ninjaUpdates = new Timer { Interval = 5000, Enabled = true };
-        //private readonly Timer _healUpdates = new Timer { Interval = 100000, Enabled = true };
+        private readonly Timer _ninjaUpdates = new Timer { Interval = 3000, Enabled = true };
+        private readonly Timer _healUpdates = new Timer { Interval = 100000, Enabled = true };
 
         private string _token;
+        
         
         public delegate void KrispyMessageCallback(SocketMessage message, object userData);
         
@@ -39,8 +40,8 @@ namespace KrispyBotRW {
             await _client.SetGameAsync(result.status, null, result.type);
         }
 
-        //private static void UpdateNinjas(object sender, ElapsedEventArgs args) { Ninja.KrispyNinjas.AdvanceGames(); }
-        //private static void UpdateHeals(object sender, ElapsedEventArgs args) { Ninja.KrispyNinjas.RestoreHP(); }
+        private static void UpdateNinjas(object sender, ElapsedEventArgs args) { Ninja.KrispyNinjas.AdvanceGames(); }
+        private static void UpdateHeals(object sender, ElapsedEventArgs args) { Ninja.KrispyNinjas.RestoreHP(); }
         
         private async Task CheckMessage(SocketMessage msg) {
             if (!(msg is SocketUserMessage userMsg)) return;
@@ -94,8 +95,8 @@ namespace KrispyBotRW {
             await _client.StartAsync();
 
             _statusUpdates.Elapsed += UpdateStatus;
-            //_ninjaUpdates.Elapsed += UpdateNinjas;
-            //_healUpdates.Elapsed += UpdateHeals;
+            _ninjaUpdates.Elapsed += UpdateNinjas;
+            _healUpdates.Elapsed += UpdateHeals;
             
             await Task.Delay(-1);
         }

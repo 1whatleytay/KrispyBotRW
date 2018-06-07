@@ -9,7 +9,6 @@ using Discord.WebSocket;
 
 namespace KrispyBotRW.Ninja {
     public class KrispyNinjas : ModuleBase<SocketCommandContext> {
-        /*
         public static void AdvanceGames() {
             var removeGames = new List<NinjaGame>();
             foreach (var game in NinjaGame.Games) {
@@ -21,7 +20,7 @@ namespace KrispyBotRW.Ninja {
 
         public static void RestoreHP() {
             foreach (var profile in NinjaProfile.Profiles.Values)
-                profile.CurrentHP = Math.Max(profile.MaxHP, profile.CurrentHP);
+                profile.CurrentHP = Math.Min(profile.MaxHP, profile.CurrentHP + 1);
         }
 
         [Command("ninja-message")]
@@ -29,7 +28,7 @@ namespace KrispyBotRW.Ninja {
             NinjaProfile.GetOrCreate(Context.User.Id).ChallengeMessage = message;
         }
         
-        [Command("ninja-expose")]
+        [Command("expose")]
         public async Task ExposeNinja([Remainder] SocketUser user) {
             await ReplyAsync("", false, NinjaProfile.GetOrCreate(user.Id).CreateEmbed(Context.Client));
         }
@@ -38,10 +37,9 @@ namespace KrispyBotRW.Ninja {
         public async Task Ninja([Remainder] SocketUser user) {
             ulong challenger = Context.User.Id, defender = user.Id;
             
-            if (NinjaProfile.GetOrCreate(challenger).InGame || NinjaProfile.GetOrCreate(defender).InGame)
+            if (NinjaProfile.GetOrCreate(challenger).Game != null || NinjaProfile.GetOrCreate(defender).Game != null)
                 await ReplyAsync("One of you are still engaged in combat. Wait for your next chance to attack!");
             else NinjaGame.Games.Add(new NinjaGame(challenger, defender, Context.Channel));
         }
-        */
     }
 }

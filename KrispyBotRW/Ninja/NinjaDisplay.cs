@@ -15,7 +15,7 @@ namespace KrispyBotRW.Ninja {
 
         private bool ShowHealthBar, ShowKOMessage;
 
-        private bool HasHealthBarValues = false;
+        private bool HasHealthBarValues;
         private int ChallengerHP, DefenderHP, ChallengerMaxHP, DefenderMaxHP;
         public void WithHealthBar(int challengerHP, int defenderHP, int challengerMaxHP, int defenderMaxHP) {
             ShowHealthBar = true;
@@ -26,9 +26,7 @@ namespace KrispyBotRW.Ninja {
             DefenderMaxHP = defenderMaxHP;
         }
 
-        public void WithHealthBar() {
-            if (HasHealthBarValues) ShowHealthBar = true;
-        }
+        public void WithHealthBar() { if (HasHealthBarValues) ShowHealthBar = true; }
 
         private bool ChallengerKO, DefenderKO;
         public void WithKOMessage(bool challengerKO, bool defenderKO) {
@@ -54,7 +52,7 @@ namespace KrispyBotRW.Ninja {
 
         private readonly AttackQueue Attacks = new AttackQueue();
         
-        public enum Participant { Challenger, Defendant }
+        public enum Participant { Challenger, Defender }
 
         private string GetTimesMessage(int times) {
             switch (times) {
@@ -66,20 +64,26 @@ namespace KrispyBotRW.Ninja {
             }
         }
 
-        public void WithCustom(string message) { Attacks.AddToQueue(message); }
+        private void WithCustom(string message) { Attacks.AddToQueue(message); }
 
-        public void WithDamage(Participant participant, int damage, int times = 1) {
+        public void WithCustom(Participant participant, string message) {
+            WithCustom(string.Format(message,
+                participant == Participant.Challenger ? ChallengerNN : DefenderNN,
+                participant == Participant.Defender ? ChallengerNN : DefenderNN));
+        }
+
+        public void WithDamage(Participant participant, int damage, int times = 1, int criticalTimes = 0) {
             string attacker = participant == Participant.Challenger ? ChallengerNN : DefenderNN,
-                defender = participant == Participant.Defendant ? ChallengerNN : DefenderNN;
+                defender = participant == Participant.Defender ? ChallengerNN : DefenderNN;
 
             if (times == 1) WithCustom(string.Format(
                                        KrispyGenerator.PickLine(KrispyLines.NinjaSingle),
                                        attacker, defender) + " [" + damage + " damage]");
             else WithCustom(string.Format(
                                         KrispyGenerator.PickLine(KrispyLines.NinjaMultiple),
-                                        attacker, defender, GetTimesMessage(times), times) + " [" + damage + " damage]");
-            
-            
+                                        attacker, defender, GetTimesMessage(times), times) + " [" + damage + " " +
+                            (criticalTimes > 0 ? "CRITICAL" + (criticalTimes > 1 ? "x" + criticalTimes : "") : "damage") +
+            "]");
         }
 
         public void ResetDisplay() {
@@ -130,12 +134,10 @@ namespace KrispyBotRW.Ninja {
             ChallengerNN = KrispyNickname.NickName(ch.Nickname ?? ch.Username);
             DefenderNN = KrispyNickname.NickName(de.Nickname ?? de.Username);
             
-            var task = messageChannel.SendMessageAsync(
+            Message = messageChannel.SendMessageAsync(
                 challengeMessage ?? 
-                "<@!" + Defender + ">! You are being attacked by <@!" + Challenger + ">. Defend yourself!"
-            );
-            while (!task.IsCompleted) {}
-            Message = task.Result;
+                DefenderNN + "! You are being attacked by " + ChallengerNN + ". Defend yourself!"
+            ).GetAwaiter().GetResult();
         }
     }
 }
