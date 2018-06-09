@@ -4,8 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
+
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -62,17 +61,17 @@ namespace KrispyBotRW {
             await ReplyAsync(endText.ToString());
         }
 
-        private static bool dadJokesEnabled;
+        private static bool DadJokesEnabled;
         
         [Command("dad-jokes")]
         public async Task DadJokes(bool state) {
-            dadJokesEnabled = state;
+            DadJokesEnabled = state;
             await ReplyAsync("Dad Jokes: " + (state ? "Enabled!" : "Disabled!"));
         }
 
-        public static async Task DadJokes(SocketMessage msg) {
+        private static async Task DadJokes(SocketMessage msg) {
             // Dad jokes are fun
-            if (!dadJokesEnabled) return;
+            if (!DadJokesEnabled) return;
             var messageText = msg.Content.ToLower() + " ";
             bool iAm = messageText.Contains("i am"), imA = messageText.Contains("i'm"), im = messageText.Contains("im");
             if ((iAm || imA || im) && !msg.Author.IsBot) {
@@ -83,7 +82,7 @@ namespace KrispyBotRW {
             }
         }
 
-        private static readonly Emoji thumbsUp = new Emoji("👍"), thumbsDown = new Emoji("👎");
+        private static readonly Emoji ThumbsUp = new Emoji("👍"), ThumbsDown = new Emoji("👎");
 
         public static async Task MonitorMessages(SocketMessage msg) {
             await DadJokes(msg);
@@ -91,8 +90,8 @@ namespace KrispyBotRW {
 
             if (msg.Channel.Id == 434090042408042506) {
                 var eventMessage = (SocketUserMessage)msg;
-                eventMessage.AddReactionAsync(thumbsUp);
-                eventMessage.AddReactionAsync(thumbsDown);
+                await eventMessage.AddReactionAsync(ThumbsUp);
+                await eventMessage.AddReactionAsync(ThumbsDown);
             }
         }
 

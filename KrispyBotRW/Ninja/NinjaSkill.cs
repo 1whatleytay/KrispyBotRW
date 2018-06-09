@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace KrispyBotRW.Ninja {
-    public class NinjaSkillBase {
+    internal class NinjaSkillBase {
         private static int IncrementId;
         public readonly int Id;
         public readonly string Name;
@@ -25,7 +25,7 @@ namespace KrispyBotRW.Ninja {
         public static NinjaSkillBase Random() { return Skills[(int)(KrispyGenerator.Value() * Skills.Length)]; }
     }
     
-    public class NinjaSkill {
+    internal class NinjaSkill {
         public readonly NinjaSkillBase BaseSkill;
         public int Level = 1;
         public int ExtraData;
@@ -36,13 +36,17 @@ namespace KrispyBotRW.Ninja {
             return builder.ToString();
         }
 
+        public NinjaSaveSkill CreateSaveSkill() {
+            return new NinjaSaveSkill(BaseSkill.Id, Level);
+        }
+
         public NinjaSkill(NinjaSkillBase baseSkill) {
             BaseSkill = baseSkill;
             ExtraData = BaseSkill.DefaultData;
         }
     }
     
-    public class NinjaSkills : List<NinjaSkill> {
+    internal class NinjaSkills : List<NinjaSkill> {
         public int CheckForSkill(int skill) {
             for (var a = 0; a < Count; a++)
                 if (this[a].BaseSkill.Id == skill) return a;
@@ -62,7 +66,7 @@ namespace KrispyBotRW.Ninja {
         public int AddNewSkill() {
             var baseSkill = NinjaSkillBase.Random();
             var skillLoc = CheckForSkill(baseSkill.Id);
-            if (skillLoc == -1) Add(new NinjaSkill(baseSkill));
+            if (skillLoc == -1) { skillLoc = Count; Add(new NinjaSkill(baseSkill)); }
             else if (this[skillLoc].Level == 3) this[skillLoc].Level++;
             return skillLoc;
         }

@@ -129,7 +129,7 @@ namespace KrispyBotRW.Ninja {
             Challenger = challenger;
             Defender = defender;
             
-            var guild = (messageChannel as SocketGuildChannel).Guild;
+            var guild = ((SocketGuildChannel)messageChannel).Guild;
             IGuildUser ch = guild.GetUser(Challenger), de = guild.GetUser(Defender);
             ChallengerNN = KrispyNickname.NickName(ch.Nickname ?? ch.Username);
             DefenderNN = KrispyNickname.NickName(de.Nickname ?? de.Username);

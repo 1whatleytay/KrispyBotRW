@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
+
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -51,7 +50,7 @@ namespace KrispyBotRW {
                 return -1;
             }
 
-            public CandidateGroup Candidates(ulong user) {
+            public CandidateGroup GetCandidates(ulong user) {
                 var group = new CandidateGroup();
                 foreach (var candidate in this)
                     if (candidate.Poster.Id == user)
@@ -80,13 +79,13 @@ namespace KrispyBotRW {
             }
         }
         
-        private static readonly Dictionary<ulong, UserProfile> profiles = new Dictionary<ulong, UserProfile>();
-        private static readonly CandidateGroup candidates = new CandidateGroup();
+        private static readonly Dictionary<ulong, UserProfile> Profiles = new Dictionary<ulong, UserProfile>();
+        private static readonly CandidateGroup Candidates = new CandidateGroup();
         
         [Command("show-votes")]
         public async Task ShowCandidates() {
             var text = new StringBuilder();
-            foreach (var candidate in candidates) {
+            foreach (var candidate in Candidates) {
                 if (candidate.Enabled)
                     text.Append(
                         ":" + candidate.Name + ": by " + KrispyNickname.FirstName(candidate.Poster.Nickname)
@@ -99,20 +98,20 @@ namespace KrispyBotRW {
         public async Task DeleteCandidate(int voteId) {
             if (!KrispyCommands.UserIsKrispyAdmin(Context.User))
                 await ReplyAsync("Sorry, only admins can use this command.");
-            if (voteId >= candidates.Count || voteId < 0)
+            if (voteId >= Candidates.Count || voteId < 0)
                 await ReplyAsync("Sorry, I couldn't find the vote you were lookign for.");
-            else if (!candidates[voteId].Enabled)
+            else if (!Candidates[voteId].Enabled)
                 await ReplyAsync("This submission has already been deleted.");
             else {
-                candidates[voteId].Enabled = false;
+                Candidates[voteId].Enabled = false;
                 await ReplyAsync(
-                    ":" + candidates[voteId].Name + ": by " +
-                    KrispyNickname.FirstName(candidates[voteId].Poster.Nickname) + "successfully deleted.");
+                    ":" + Candidates[voteId].Name + ": by " +
+                    KrispyNickname.FirstName(Candidates[voteId].Poster.Nickname) + "successfully deleted.");
             }
         }
 
         [Command("clean-vote")]
-        public async Task DeleteCandidate(string emojiName) { await DeleteCandidate(candidates.At(emojiName)); }
+        public async Task DeleteCandidate(string emojiName) { await DeleteCandidate(Candidates.At(emojiName)); }
         
         [Command("show-profile")]
         public async Task ShowProfile(SocketUser user) {
@@ -120,13 +119,13 @@ namespace KrispyBotRW {
                 await ReplyAsync("Sorry, only admins can use this command.");
                 return;
             }
-            var ccands = candidates.Candidates(user.Id);
-            var cvotes = candidates.Votes(user.Id);
-            var maxVotesDesc = profiles.ContainsKey(user.Id)
-                ? "Max Votes: " + profiles[user.Id].CustomMaxVotes
+            var ccands = Candidates.GetCandidates(user.Id);
+            var cvotes = Candidates.Votes(user.Id);
+            var maxVotesDesc = Profiles.ContainsKey(user.Id)
+                ? "Max Votes: " + Profiles[user.Id].CustomMaxVotes
                 : "";
-            var maxSubmissionsDesc = profiles.ContainsKey(user.Id)
-                ? "Max Submissions: " + profiles[user.Id].CustomMaxSubmissions
+            var maxSubmissionsDesc = Profiles.ContainsKey(user.Id)
+                ? "Max Submissions: " + Profiles[user.Id].CustomMaxSubmissions
                 : "";
             var submissionsDesc = new StringBuilder("Submissions:\n");
             foreach (var cand in ccands)
@@ -155,8 +154,8 @@ namespace KrispyBotRW {
                 await ReplyAsync("Sorry, only admins can use this command.");
                 return;
             }
-            if (profiles.ContainsKey(user.Id)) profiles.Remove(user.Id);
-            candidates.RemoveUser(user.Id);
+            if (Profiles.ContainsKey(user.Id)) Profiles.Remove(user.Id);
+            Candidates.RemoveUser(user.Id);
             await ReplyAsync("User " + user.Username + "#" + user.Discriminator + " successfully cleaned!");
         }
 
@@ -166,8 +165,8 @@ namespace KrispyBotRW {
                 await ReplyAsync("Sorry, only admins can use this command.");
                 return;
             }
-            if (profiles.ContainsKey(user.Id)) profiles[user.Id].CustomMaxVotes++;
-            else profiles.Add(user.Id, new UserProfile { CustomMaxVotes = MaxVotes + 1 });
+            if (Profiles.ContainsKey(user.Id)) Profiles[user.Id].CustomMaxVotes++;
+            else Profiles.Add(user.Id, new UserProfile { CustomMaxVotes = MaxVotes + 1 });
             await ReplyAsync("Granted vote to " + user.Username + "#" + user.Discriminator + ".");
         }
 
@@ -177,25 +176,25 @@ namespace KrispyBotRW {
                 await ReplyAsync("Sorry, only admins can use this command.");
                 return;
             }
-            if (profiles.ContainsKey(user.Id)) profiles[user.Id].CustomMaxSubmissions++;
-            else profiles.Add(user.Id, new UserProfile { CustomMaxSubmissions = MaxSubmissions + 1 });
+            if (Profiles.ContainsKey(user.Id)) Profiles[user.Id].CustomMaxSubmissions++;
+            else Profiles.Add(user.Id, new UserProfile { CustomMaxSubmissions = MaxSubmissions + 1 });
             await ReplyAsync("Granted submission to " + user.Username + "#" + user.Discriminator + ".");
         }
         
         [Command("vote")]
         public async Task Vote(int voteId) {
-            if (voteId >= candidates.Count || voteId < 0) {
+            if (voteId >= Candidates.Count || voteId < 0) {
                 await ReplyAsync("I couldn't find the submission you were talking about... try again?");
                 return;
             }
-            var candidate = candidates[voteId];
+            var candidate = Candidates[voteId];
             if (candidate.Enabled) {
                 if (candidate.Poster.Id == Context.User.Id) await ReplyAsync("Hey... you can't vote for yourself!");
                 else {
-                    var cvotes = profiles.ContainsKey(Context.User.Id)
-                        ? profiles[Context.User.Id].CustomMaxVotes
+                    var cvotes = Profiles.ContainsKey(Context.User.Id)
+                        ? Profiles[Context.User.Id].CustomMaxVotes
                         : MaxVotes;
-                    if (candidates.Votes(Context.User.Id).Count >= cvotes) {
+                    if (Candidates.Votes(Context.User.Id).Count >= cvotes) {
                         await ReplyAsync("You've already voted " + cvotes + " time" + (cvotes == 1 ? "" : "s") + ".");
                     } else {
                         candidate.Votes.Add((IGuildUser)Context.User);
@@ -206,7 +205,7 @@ namespace KrispyBotRW {
         }
         
         [Command("vote")]
-        public async Task Vote(string emojiName) { await Vote(candidates.At(emojiName)); }
+        public async Task Vote(string emojiName) { await Vote(Candidates.At(emojiName)); }
 
         [Command("submit")]
         public async Task Submit() { await ReplyAsync("You might want to add a name to your submission. Use `@Krispy Bot submit <name>` and attach your image."); }
@@ -216,24 +215,24 @@ namespace KrispyBotRW {
             if (Context.Message.Attachments.Count < 1)
                 await ReplyAsync("... you didn't submit anything. Try again, but upload an image. I don't think you can paste links either.");
             else {
-                var cmaxSubmissions = (profiles.ContainsKey(Context.User.Id)
-                    ? profiles[Context.User.Id].CustomMaxSubmissions
+                var cmaxSubmissions = (Profiles.ContainsKey(Context.User.Id)
+                    ? Profiles[Context.User.Id].CustomMaxSubmissions
                     : MaxSubmissions);
-                if (candidates.Candidates(Context.User.Id).Count >= cmaxSubmissions)
+                if (Candidates.GetCandidates(Context.User.Id).Count >= cmaxSubmissions)
                     await ReplyAsync("You've already posted " + cmaxSubmissions + " submissions!");
                 else {
                     var cname = KrispyLines.Emojify(emojiName);
-                    var existingSubmission = candidates.At(cname);
+                    var existingSubmission = Candidates.At(cname);
                     if (existingSubmission == -1) {
                         var candidate = new Candidate(
                             KrispyLines.Emojify(emojiName),
                             Context.Message.Attachments.First().Url,
                             (IGuildUser) Context.User,
-                            candidates.Count);
-                        candidates.Add(candidate);
+                            Candidates.Count);
+                        Candidates.Add(candidate);
                         await ReplyAsync("", false, candidate.FullEmbed);
                     } else {
-                        var submission = candidates[existingSubmission];
+                        var submission = Candidates[existingSubmission];
                         var poster = submission.Poster.Id == Context.User.Id
                             ? "You"
                             : KrispyNickname.FirstName(submission.Poster.Nickname);

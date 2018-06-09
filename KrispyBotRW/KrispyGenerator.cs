@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Text;
 
-using Discord;
-
 namespace KrispyBotRW {
     public static class KrispyGenerator {
         private static readonly Random Rng = new Random();

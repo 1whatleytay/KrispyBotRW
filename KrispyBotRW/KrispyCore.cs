@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Timers;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -16,15 +14,15 @@ namespace KrispyBotRW {
     public class KrispyCore {
         public const int VersionMajor = 0, VersionMinor = 3, Revision = 0;
         
-        private readonly DiscordSocketClient _client = new DiscordSocketClient();
-        private readonly CommandService _commands = new CommandService();
-        private IServiceProvider _services;
+        private readonly DiscordSocketClient Client = new DiscordSocketClient();
+        private readonly CommandService Commands = new CommandService();
+        private IServiceProvider Services;
         
-        private readonly Timer _statusUpdates = new Timer { Interval = 10 * 60 * 1000, Enabled = true };
-        private readonly Timer _ninjaUpdates = new Timer { Interval = 3000, Enabled = true };
-        private readonly Timer _healUpdates = new Timer { Interval = 100000, Enabled = true };
+        private readonly Timer StatusUpdates = new Timer { Interval = 10 * 60 * 1000, Enabled = true };
+        private readonly Timer NinjaUpdates = new Timer { Interval = 3000, Enabled = true };
+        private readonly Timer HealUpdates = new Timer { Interval = 100000, Enabled = true };
 
-        private string _token;
+        private string Token;
         
         
         public delegate void KrispyMessageCallback(SocketMessage message, object userData);
@@ -37,7 +35,7 @@ namespace KrispyBotRW {
         private async void UpdateStatus(object sender, ElapsedEventArgs args) {
             if (!KrispyGenerator.Odds(4)) return;
             var result = new KrispyStatusLine();
-            await _client.SetGameAsync(result.status, null, result.type);
+            await Client.SetGameAsync(result.Status, null, result.Type);
         }
 
         private static void UpdateNinjas(object sender, ElapsedEventArgs args) { Ninja.KrispyNinjas.AdvanceGames(); }
@@ -46,19 +44,19 @@ namespace KrispyBotRW {
         private async Task CheckMessage(SocketMessage msg) {
             if (!(msg is SocketUserMessage userMsg)) return;
 
-            KrispyCommands.MonitorMessages(msg);
+            await KrispyCommands.MonitorMessages(msg);
 
             int mentionPos = 0, charPos = 0;
             bool passMention = false, passChar = false;
 
-            if (userMsg.HasMentionPrefix(_client.CurrentUser, ref mentionPos)) passMention = true;
+            if (userMsg.HasMentionPrefix(Client.CurrentUser, ref mentionPos)) passMention = true;
             else if (userMsg.HasCharPrefix('$', ref charPos)) passChar = true;
 
             if (passMention || passChar) {
                 var pos = passMention ? mentionPos : charPos;
-                if (await KrispyCommands.Fun(_client, msg, pos)) return;
-                var context = new SocketCommandContext(_client, userMsg);
-                var result = await _commands.ExecuteAsync(context, pos, _services);
+                if (await KrispyCommands.Fun(Client, msg, pos)) return;
+                var context = new SocketCommandContext(Client, userMsg);
+                var result = await Commands.ExecuteAsync(context, pos, Services);
                 if (!result.IsSuccess) {
                     if (result.Error == CommandError.UnknownCommand) {
                         var chosenLine = KrispyGenerator.PickLine(KrispyLines.Unknown);
@@ -74,29 +72,29 @@ namespace KrispyBotRW {
         }
 
         private async Task KrispyAsync() {
-            _services = new ServiceCollection()
-                .AddSingleton(_client)
-                .AddSingleton(_commands)
+            Services = new ServiceCollection()
+                .AddSingleton(Client)
+                .AddSingleton(Commands)
                 .BuildServiceProvider();
 
-            _client.Log += Log;
-            _client.MessageReceived += CheckMessage;
-            await _commands.AddModulesAsync(Assembly.GetEntryAssembly());
+            Client.Log += Log;
+            Client.MessageReceived += CheckMessage;
+            await Commands.AddModulesAsync(Assembly.GetEntryAssembly());
 
             try {
-                _token = File.ReadAllText("token.txt");
+                Token = File.ReadAllText("token.txt");
             } catch (FileNotFoundException) {
                 Console.WriteLine(
                     "Could not find bot token. Please start program with arguments `token <token>` to set the current token.");
                 return;
             }
 
-            await _client.LoginAsync(TokenType.Bot, _token);
-            await _client.StartAsync();
+            await Client.LoginAsync(TokenType.Bot, Token);
+            await Client.StartAsync();
 
-            _statusUpdates.Elapsed += UpdateStatus;
-            _ninjaUpdates.Elapsed += UpdateNinjas;
-            _healUpdates.Elapsed += UpdateHeals;
+            StatusUpdates.Elapsed += UpdateStatus;
+            NinjaUpdates.Elapsed += UpdateNinjas;
+            HealUpdates.Elapsed += UpdateHeals;
             
             await Task.Delay(-1);
         }

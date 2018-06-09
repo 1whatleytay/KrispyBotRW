@@ -2,7 +2,6 @@
 using System.Text;
 using System.Threading.Tasks;
 
-using Discord;
 using Discord.Commands;
 
 namespace KrispyBotRW {
@@ -23,7 +22,7 @@ namespace KrispyBotRW {
             var builder = new StringBuilder();
             foreach (var role in Context.Guild.Roles)
                 builder.Append(role.Name.PadRight(30) + " " + role.Id + "\n");
-            await ReplyAsync("```\n" + builder.ToString() + "\n```");
+            await ReplyAsync("```\n" + builder + "\n```");
         }
         
         [Command("version")]

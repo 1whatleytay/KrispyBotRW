@@ -1,5 +1,5 @@
 ﻿namespace KrispyBotRW.Ninja {
-    internal class NinjaLevel {
+    public class NinjaLevel {
         private static int IncrementId;
         public readonly string Name;
         public readonly int Number, ExpRequirements;

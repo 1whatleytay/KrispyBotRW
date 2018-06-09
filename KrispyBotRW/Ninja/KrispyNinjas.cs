@@ -1,7 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Runtime.Serialization.Formatters.Binary;
 
 using Discord;
 using Discord.Commands;
@@ -22,24 +23,59 @@ namespace KrispyBotRW.Ninja {
             foreach (var profile in NinjaProfile.Profiles.Values)
                 profile.CurrentHP = Math.Min(profile.MaxHP, profile.CurrentHP + 1);
         }
+        
+        [Command("nj-load")]
+        public async Task NinjaLoad() {
+            NinjaProfile.Profiles.Clear();
+            var formatter = new BinaryFormatter();
+            var fs = new FileStream("ninjas.bin", FileMode.Open, FileAccess.Read);
+            var saveProfiles = (List<NinjaSaveProfile>) formatter.Deserialize(fs);
+            foreach (var save in saveProfiles) {
+                var cprof = save.CreateProfile();
+                NinjaProfile.Profiles.Add(cprof.UserId, cprof);
+            }
+            fs.Close();
+        }
 
-        [Command("ninja-message")]
-        public async Task ChangeNinjaMessage([Remainder] string message) {
-            NinjaProfile.GetOrCreate(Context.User.Id).ChallengeMessage = message;
+        [Command("nj-save")]
+        public async Task NinjaSave() {
+            var formatter = new BinaryFormatter();
+            var fs = new FileStream("ninjas.bin", FileMode.Create, FileAccess.Write);
+            var saveProfiles = new List<NinjaSaveProfile>();
+            foreach (var profile in NinjaProfile.Profiles.Values)
+                saveProfiles.Add(profile.CreateSaveProfile());
+            formatter.Serialize(fs, saveProfiles);
+            fs.Close();
+            await ReplyAsync("Everything is saved. Feel free to reset the bot.");
         }
         
-        [Command("expose")]
-        public async Task ExposeNinja([Remainder] SocketUser user) {
+        [Command("nj-message")]
+        public async Task NinjaChangeMessage([Remainder] string message) {
+            NinjaProfile.GetOrCreate(Context.User.Id).ChallengeMessage = message;
+            await ReplyAsync("Your challenge message has been changed!");
+        }
+        
+        [Command("nj-show")]
+        public async Task NinjaShow(SocketUser user) {
             await ReplyAsync("", false, NinjaProfile.GetOrCreate(user.Id).CreateEmbed(Context.Client));
         }
 
+        [Command("nj")]
+        public async Task Nj(SocketUser user) { await Ninja(user); }
+        
         [Command("ninja")]
-        public async Task Ninja([Remainder] SocketUser user) {
+        public async Task Ninja(SocketUser user) {
             ulong challenger = Context.User.Id, defender = user.Id;
             
             if (NinjaProfile.GetOrCreate(challenger).Game != null || NinjaProfile.GetOrCreate(defender).Game != null)
                 await ReplyAsync("One of you are still engaged in combat. Wait for your next chance to attack!");
             else NinjaGame.Games.Add(new NinjaGame(challenger, defender, Context.Channel));
+        }
+        
+        [Command("beta")]
+        public async Task OptIn() {
+            await ((IGuildUser) Context.User).AddRoleAsync(Context.Guild.GetRole(454255214606811146));
+            await ReplyAsync("Now you're part of the ninja beta :D");
         }
     }
 }

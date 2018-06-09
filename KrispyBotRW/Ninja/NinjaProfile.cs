@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
-using System.Runtime.ExceptionServices;
 
 using Discord;
 using Discord.WebSocket;
@@ -15,7 +12,7 @@ namespace KrispyBotRW.Ninja {
         public int HitMinimum = 2, HitMaximum = 5;
         public double Speed = 2.5;
         
-        private int ExpLevel;
+        public int ExpLevel;
         public NinjaLevel Level;
         public NinjaSkills Skills = new NinjaSkills();
         public string ChallengeMessage;
@@ -31,9 +28,9 @@ namespace KrispyBotRW.Ninja {
             if (loc != -1) {
                 var skill = Skills[loc];
                 if (skill.Level == 1)
-                    levelUpMessage += " Obtained new skill **" + skill.BaseSkill.Name + "** " + skill.GetLevelText() + "!";
+                    levelUpMessage += " Obtained new skill **" + skill.BaseSkill.Name + "**!";
                 else
-                    levelUpMessage += " Upgraded skill to " + skill.BaseSkill.Name + " **" + skill.GetLevelText() + "**!";
+                    levelUpMessage += " Upgraded skill to **" + skill.BaseSkill.Name + " " + skill.GetLevelText() + "**!";
             }
             battleChannel?.SendMessageAsync(levelUpMessage);
         }
@@ -43,7 +40,7 @@ namespace KrispyBotRW.Ninja {
             if (val >= 0 && val < 0.5)
             { MaxHP++; CurrentHP++; }
             else if (val >= 0.5 && val < 0.65)
-                Speed *= 0.99;
+                Speed *= 0.98;
             else if (val >= 0.65 && val < 0.80)
                 MaxStamina++;
             else if (val >= 0.80 && val < 0.92)
@@ -91,7 +88,7 @@ namespace KrispyBotRW.Ninja {
                 .Build();
         }
         
-        public static readonly Dictionary<ulong, NinjaProfile> Profiles = new Dictionary<ulong, NinjaProfile>() {
+        public static Dictionary<ulong, NinjaProfile> Profiles = new Dictionary<ulong, NinjaProfile>() {
             {414619400742633493, new NinjaProfile(414619400742633493) {
                 Level = NinjaLevel.Levels[11],
                 MaxHP = 900, CurrentHP = 900,
@@ -116,8 +113,17 @@ namespace KrispyBotRW.Ninja {
             if (!Profiles.ContainsKey(user)) Profiles.Add(user, new NinjaProfile(user));
             return Profiles[user];
         }
+
+        public NinjaSaveProfile CreateSaveProfile() {
+            return new NinjaSaveProfile(
+                UserId,
+                MaxHP, CurrentHP,
+                MaxStamina, HitMinimum, HitMaximum,
+                Speed, Skills.ToArray(),
+                ExpLevel, Level, ChallengeMessage);
+        }
         
-        private NinjaProfile(ulong userId) {
+        public NinjaProfile(ulong userId) {
             UserId = userId;
             Level = NinjaLevel.Levels[0];
             IncreaseStats(10); }

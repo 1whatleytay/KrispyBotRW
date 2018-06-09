@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 
 using Discord;
 
@@ -30,8 +27,8 @@ namespace KrispyBotRW {
     }
     
     public class KrispyStatusLine {
-        public readonly string status;
-        public readonly ActivityType type = ActivityType.Playing;
+        public readonly string Status;
+        public readonly ActivityType Type = ActivityType.Playing;
 
         public KrispyStatusLine() {
             var toParse = KrispyGenerator.PickLine(KrispyLines.Status);
@@ -40,12 +37,12 @@ namespace KrispyBotRW {
             var isListening = toParse.StartsWith("!l");
             var isStreaming = toParse.StartsWith("!s");
             if (isPlaying || isWatching || isListening || isStreaming) {
-                if (isPlaying) type = ActivityType.Playing;
-                else if (isWatching) type = ActivityType.Watching;
-                else if (isListening) type = ActivityType.Listening;
-                else if (isStreaming) type = ActivityType.Streaming;
-                status = toParse.Substring(3);
-            } else status = toParse;
+                if (isPlaying) Type = ActivityType.Playing;
+                else if (isWatching) Type = ActivityType.Watching;
+                else if (isListening) Type = ActivityType.Listening;
+                else Type = ActivityType.Streaming;
+                Status = toParse.Substring(3);
+            } else Status = toParse;
         }
     }
 }

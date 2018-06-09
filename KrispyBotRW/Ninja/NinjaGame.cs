@@ -27,12 +27,6 @@ namespace KrispyBotRW.Ninja {
             
             Display.ResetDisplay();
             
-            int challengerLastMovement = (int)(Timestep / Challenger.Speed),
-                defenderLastMovement = (int)(Timestep / Defender.Speed);
-            Timestep++;
-            int challengerMovement = (int)(Timestep / Challenger.Speed),
-                defenderMovement = (int)(Timestep / Defender.Speed);
-
             Challenger.CurrentStamina--;
             Defender.CurrentStamina--;
 
@@ -40,9 +34,16 @@ namespace KrispyBotRW.Ninja {
                 defenderTired = Defender.CurrentStamina <= 0;
             
             if (Challenger.CurrentStamina == 0) Display.WithCustom(NinjaDisplay.Participant.Challenger,
-                "{0} has become tired! He won't do as much damage from now on.");
+                "{0} has become tired! He's not moving as fast as before...");
             if (Defender.CurrentStamina == 0) Display.WithCustom(NinjaDisplay.Participant.Defender,
-                "{0} has become tired! He won't do as much damage from now on.");
+                "{0} has become tired! He's not moving as fast as before...");
+            
+            int challengerLastMovement = (int)(Timestep / (Challenger.Speed * (challengerTired ? 1.5 : 1))),
+                defenderLastMovement = (int)(Timestep / (Defender.Speed * (defenderTired ? 1.5 : 1)));
+            Timestep++;
+            int challengerMovement = (int)(Timestep / (Challenger.Speed * (challengerTired ? 1.5 : 1))),
+                defenderMovement = (int)(Timestep / (Defender.Speed * (defenderTired ? 1.5 : 1)));
+
 
             
             int challengerAttackTimes = challengerMovement - challengerLastMovement,
@@ -72,7 +73,6 @@ namespace KrispyBotRW.Ninja {
             
             for (var a = 0; a < challengerAttackTimes; a++) {
                 var dmg = KrispyGenerator.NumberBetween(Challenger.HitMinimum, Challenger.HitMaximum);
-                if (challengerTired) dmg /= 3;
                 if (KrispyGenerator.Value() <= challengerCriticalOdds) { dmg *= 2; challengerCriticalTimes++; }
                 dmg = (int)(dmg * challengerDmgAmp);
                 dmg -= Defender.Skills.CheckForLevel(4);
@@ -82,7 +82,6 @@ namespace KrispyBotRW.Ninja {
             
             for (var a = 0; a < defenderAttackTimes; a++) {
                 var dmg = KrispyGenerator.NumberBetween(Defender.HitMinimum, Defender.HitMaximum);
-                if (defenderTired) dmg /= 3 / 2;
                 if (KrispyGenerator.Value() <= defenderCriticalOdds) { dmg *= 2; defenderCriticalTimes++; }
                 dmg = (int)(dmg * defenderDmgAmp);
                 dmg -= Challenger.Skills.CheckForLevel(4);
@@ -127,7 +126,7 @@ namespace KrispyBotRW.Ninja {
                 }
             } else Display.WithHealthBar();
 
-            Display.UpdateDisplay();
+            Display.UpdateDisplay().GetAwaiter().GetResult();
             if (GameOver) return StepResult.End;
             if (challengerAttackTimes > 0 || defenderAttackTimes > 0) return StepResult.Exchange;
             return StepResult.Nothing;
