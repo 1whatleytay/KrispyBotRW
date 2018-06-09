@@ -93,7 +93,7 @@ namespace KrispyBotRW {
             foreach (var profile in profileValues) {
                 var user = Context.Guild.GetUser(profile.UserId);
                 if (user == null) continue;
-                bool isAdminOrMod;
+                bool isAdminOrMod = false;
                 foreach (var role in Context.Guild.Roles)
                     if (role.Id == 378339275189518336 || role.Id == 378339453166682112) {
                         isAdminOrMod = true;
