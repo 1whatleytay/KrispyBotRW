@@ -6,7 +6,8 @@ Here's what I know I can do (as long as you prefix it with `@Krispy Bot#8270`):
  [schedule] <classes> - Resets your role to match your schedule, postfix your classes at the end of the command.
  [nickname] <new nickname> - Resets your server nickname.
  [nsfw] - Opt into the NSFW channel. Beware, you won't be able to undo this (unless you ask a mod)!
- [vote] <mention/name/nickname> - If followed by a name, nickname or mention, votes for someone.
+ [ninja] <mention> - Engage your friend in a duel to the death between each other's ninjas.
+ [leaderboard] - Show the activity leaderboard. See how you're comparing to other members.
  ```
  Hey, that's about all I know, but I'm working on it, okay?
  Try to speak to me generally, if I say I don't know what you're talking about, just remember I'm just a bot.

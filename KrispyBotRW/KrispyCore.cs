@@ -12,13 +12,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace KrispyBotRW {
     public class KrispyCore {
-        public const int VersionMajor = 0, VersionMinor = 3, Revision = 0;
+        public const int VersionMajor = 0, VersionMinor = 4, Revision = 1;
         
         private readonly DiscordSocketClient Client = new DiscordSocketClient();
         private readonly CommandService Commands = new CommandService();
         private IServiceProvider Services;
         
-        private readonly Timer StatusUpdates = new Timer { Interval = 10 * 60 * 1000, Enabled = true };
+        private readonly Timer StatusUpdates = new Timer { Interval = 600000, Enabled = true };
         private readonly Timer NinjaUpdates = new Timer { Interval = 3000, Enabled = true };
         private readonly Timer HealUpdates = new Timer { Interval = 100000, Enabled = true };
 

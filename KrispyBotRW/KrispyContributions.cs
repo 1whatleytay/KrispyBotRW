@@ -91,8 +91,15 @@ namespace KrispyBotRW {
             Profiles.Values.CopyTo(profileValues, 0);
             Array.Sort(profileValues, (x, y) => y.GetScore() - x.GetScore());
             foreach (var profile in profileValues) {
-                var user = Context.Client.GetUser(profile.UserId);
+                var user = Context.Guild.GetUser(profile.UserId);
                 if (user == null) continue;
+                bool isAdminOrMod;
+                foreach (var role in Context.Guild.Roles)
+                    if (role.Id == 378339275189518336 || role.Id == 378339453166682112) {
+                        isAdminOrMod = true;
+                        break;
+                    }
+                if (isAdminOrMod) return;
                 builder.Append(
                     (user.Username + "#" + user.Discriminator).PadRight(30) + " | " +
                     profile.GetScore().ToString().PadLeft(10) + "\n");
