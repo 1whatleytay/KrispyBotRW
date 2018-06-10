@@ -14,7 +14,7 @@ namespace KrispyBotRW.Ninja {
         
         public int ExpLevel;
         public NinjaLevel Level;
-        public NinjaSkills Skills = new NinjaSkills();
+        public readonly NinjaSkills Skills = new NinjaSkills();
         public string ChallengeMessage;
 
         public NinjaGame Game;
@@ -64,7 +64,7 @@ namespace KrispyBotRW.Ninja {
         }
         
         public void EndGame() {
-            CurrentHP = Math.Min(Math.Max(CurrentHP + MaxHP / 2, 0), MaxHP);
+            CurrentHP = Math.Min(Math.Max(CurrentHP, 0) + MaxHP / 2, MaxHP);
             CurrentStamina = MaxStamina;
             Skills.ResetSkillData();
             Game = null;

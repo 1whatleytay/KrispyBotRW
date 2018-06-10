@@ -67,7 +67,7 @@ namespace KrispyBotRW.Ninja {
             var baseSkill = NinjaSkillBase.Random();
             var skillLoc = CheckForSkill(baseSkill.Id);
             if (skillLoc == -1) { skillLoc = Count; Add(new NinjaSkill(baseSkill)); }
-            else if (this[skillLoc].Level == 3) this[skillLoc].Level++;
+            else if (this[skillLoc].Level <= 3) this[skillLoc].Level++;
             return skillLoc;
         }
 

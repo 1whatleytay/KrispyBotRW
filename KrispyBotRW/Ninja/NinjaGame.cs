@@ -134,14 +134,14 @@ namespace KrispyBotRW.Ninja {
                 if (challengerKO && challengerLastStand != null && challengerLastStand.ExtraData > 0) {
                     Challenger.CurrentHP = (int)(Challenger.MaxHP * Challenger.Skills.CheckForLevel(3) * 0.05);
                     Display.WithCustom(NinjaDisplay.Participant.Challenger,
-                        "{0} survived a strong hit! He's on his last stand!");
+                        "{0} survived a strong hit! They're on their last stand!");
                     challengerLastStand.ExtraData--;
                     challengerKO = false;
                 }
                 if (defenderKO && defenderLastStand != null && defenderLastStand.ExtraData > 0) {
                     Defender.CurrentHP = (int)(Defender.MaxHP * Defender.Skills.CheckForLevel(3) * 0.05);
                     Display.WithCustom(NinjaDisplay.Participant.Defender,
-                        "{0} survived a strong hit! He's on his last stand!");
+                        "{0} survived a strong hit! They're on their last stand!");
                     defenderLastStand.ExtraData--;
                     defenderKO = false;
                 }
