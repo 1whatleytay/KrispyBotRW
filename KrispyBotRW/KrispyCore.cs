@@ -20,10 +20,9 @@ namespace KrispyBotRW {
         
         private readonly Timer StatusUpdates = new Timer { Interval = 600000, Enabled = true };
         private readonly Timer NinjaUpdates = new Timer { Interval = 3000, Enabled = true };
-        private readonly Timer HealUpdates = new Timer { Interval = 100000, Enabled = true };
+        private readonly Timer HealUpdates = new Timer { Interval = 20000, Enabled = true };
 
         private string Token;
-        
         
         public delegate void KrispyMessageCallback(SocketMessage message, object userData);
         
@@ -103,7 +102,6 @@ namespace KrispyBotRW {
             if (args.Length >= 2 && args[0] == "token") {
                 File.WriteAllText("token.txt", args[1]);
                 Console.WriteLine("Token added!");
-                return;
             }
             new KrispyCore().KrispyAsync().GetAwaiter().GetResult();
         }

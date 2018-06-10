@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Discord;
 
@@ -55,11 +56,13 @@ namespace KrispyBotRW.Ninja {
             
             if (KrispyGenerator.Value() <= challengerDodgeOdds) {
                 defenderAttackTimes = 0;
-                Display.WithCustom(NinjaDisplay.Participant.Challenger, "{0} dodged {1}'s attack!");
+                Display.WithCustom(NinjaDisplay.Participant.Challenger,
+                    KrispyGenerator.PickLine(KrispyLines.NinjaDodges));
             }
             if (KrispyGenerator.Value() <= defenderDodgeOdds) {
                 challengerAttackTimes = 0;
-                Display.WithCustom(NinjaDisplay.Participant.Defender, "{0} dodged {1}'s attack!");
+                Display.WithCustom(NinjaDisplay.Participant.Defender,
+                    KrispyGenerator.PickLine(KrispyLines.NinjaDodges));
             }
 
             int challengerCriticalTimes = 0, defenderCriticalTimes = 0;
@@ -89,16 +92,39 @@ namespace KrispyBotRW.Ninja {
                 Challenger.CurrentHP -= dmg;
             }
             
-
             if (challengerAttackTimes > 0 || defenderAttackTimes > 0) {
-                
-                if (challengerAttackTimes > 0)
+
+                if (challengerAttackTimes > 0) {
+                    if (Challenger.Skills.SkillExists(6)) {
+                        var skill = Challenger.Skills.GetSkill(6);
+                        skill.ExtraData--;
+                        if (skill.ExtraData <= 0) {
+                            skill.ExtraData = skill.BaseSkill.DefaultData;
+                            Challenger.CurrentHP =
+                                Math.Min(Challenger.CurrentHP +
+                                         KrispyGenerator.NumberBetween(skill.Level * 5, skill.Level * 10),
+                                    Challenger.MaxHP);
+                        }
+                    }
                     Display.WithDamage(NinjaDisplay.Participant.Challenger, challengerDamage,
                         challengerAttackTimes, challengerCriticalTimes);
-                if (defenderAttackTimes > 0)
+                }
+                if (defenderAttackTimes > 0) {
+                    if (Defender.Skills.SkillExists(6)) {
+                        var skill = Defender.Skills.GetSkill(6);
+                        skill.ExtraData--;
+                        if (skill.ExtraData <= 0) {
+                            skill.ExtraData = skill.BaseSkill.DefaultData;
+                            Defender.CurrentHP =
+                                Math.Min(Defender.CurrentHP +
+                                         KrispyGenerator.NumberBetween(skill.Level * 5, skill.Level * 10),
+                                    Defender.MaxHP);
+                        }
+                    }
                     Display.WithDamage(NinjaDisplay.Participant.Defender, defenderDamage,
                         defenderAttackTimes, defenderCriticalTimes);
-                
+                }
+
                 Display.WithHealthBar(Challenger.CurrentHP, Defender.CurrentHP, Challenger.MaxHP, Defender.MaxHP);
                 
                 bool challengerKO = Challenger.CurrentHP <= 0, defenderKO = Defender.CurrentHP <= 0;

@@ -20,6 +20,7 @@ namespace KrispyBotRW.Ninja {
             new NinjaSkillBase("Last Stand", 1), // Lets your ninja survive one more attack before dying
             new NinjaSkillBase("Resist"), // Your ninja takes 1 less damage every turn
             new NinjaSkillBase("Last Ditch Effort"), // Your ninja does up to 30% more damage as it's health gets lower
+            new NinjaSkillBase("Mend", 3),
         };
 
         public static NinjaSkillBase Random() { return Skills[(int)(KrispyGenerator.Value() * Skills.Length)]; }
@@ -58,7 +59,6 @@ namespace KrispyBotRW.Ninja {
             if (skillIndex == -1) return 0;
             return this[skillIndex].Level;
         }
-
 
         public bool SkillExists(int skill) { return CheckForSkill(skill) != -1; }
         public NinjaSkill GetSkill(int skill) { var loc = CheckForSkill(skill); return loc == -1 ? null : this[loc]; }

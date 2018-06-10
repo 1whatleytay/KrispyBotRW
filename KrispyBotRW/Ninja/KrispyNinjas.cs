@@ -21,7 +21,7 @@ namespace KrispyBotRW.Ninja {
 
         public static void RestoreHP() {
             foreach (var profile in NinjaProfile.Profiles.Values)
-                profile.CurrentHP = Math.Min(profile.MaxHP, profile.CurrentHP + 1);
+                profile.CurrentHP = Math.Min(profile.MaxHP, profile.CurrentHP + 3);
         }
         
         [Command("nj-load")]
@@ -57,7 +57,11 @@ namespace KrispyBotRW.Ninja {
         
         [Command("nj-show")]
         public async Task NinjaShow(SocketUser user) {
-            await ReplyAsync("", false, NinjaProfile.GetOrCreate(user.Id).CreateEmbed(Context.Client));
+            try {
+                await ReplyAsync("", false, NinjaProfile.GetOrCreate(user.Id).CreateEmbed(Context.Client));
+            } catch (Exception e) {
+                await ReplyAsync(e.Message + "\n```\n" + e.StackTrace + "\n```");
+            }
         }
 
         [Command("nj")]
@@ -66,8 +70,11 @@ namespace KrispyBotRW.Ninja {
         [Command("ninja")]
         public async Task Ninja(SocketUser user) {
             ulong challenger = Context.User.Id, defender = user.Id;
-            
-            if (NinjaProfile.GetOrCreate(challenger).Game != null || NinjaProfile.GetOrCreate(defender).Game != null)
+
+            if (challenger == defender)
+                await ReplyAsync("Hey... you can't challenge yourself!");
+            else if (NinjaProfile.GetOrCreate(challenger).Game != null ||
+                     NinjaProfile.GetOrCreate(defender).Game != null)
                 await ReplyAsync("One of you are still engaged in combat. Wait for your next chance to attack!");
             else NinjaGame.Games.Add(new NinjaGame(challenger, defender, Context.Channel));
         }

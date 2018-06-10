@@ -13,7 +13,8 @@
 {0} hacks into {1}.
 {0} does a cringy dance.
 {0} is playing Fortnite. It hurts to watch.
-{0} becomes god. {1} falls over while bowing.
+{0} becomes god. 
+{1} falls over while bowing.
 {0} has a voodoo doll of {1}.
 {0} gets Sachiko to harass {1}.
 {0} sends {1} to the Shadow Realm.
@@ -28,4 +29,7 @@
 {0} stream snipes {1}.
 {0} decides to SWAT {1}.
 {0} hires more ninjas.
-{0} runs out of ideas and punches.
+{0} runs out of ideas and punches {1}.
+{0} uses their diamond sword on {1}.
+{0} steal's {1}'s roblox gf.
+{0} releases a gun-bearing crow upon {1}.

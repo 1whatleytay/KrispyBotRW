@@ -84,7 +84,7 @@ namespace KrispyBotRW {
             await ReplyAsync("All contributions reset!");
         }
 
-        [Command("ct-leaderboard")]
+        [Command("leaderboard")]
         public async Task ShowLeaderboard() {
             var builder = new StringBuilder("```\n");
             var profileValues = new ContributionProfile[Profiles.Values.Count];
