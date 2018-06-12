@@ -44,8 +44,6 @@ namespace KrispyBotRW.Ninja {
             Timestep++;
             int challengerMovement = (int)(Timestep / (Challenger.Speed * (challengerTired ? 1.5 : 1))),
                 defenderMovement = (int)(Timestep / (Defender.Speed * (defenderTired ? 1.5 : 1)));
-
-
             
             int challengerAttackTimes = challengerMovement - challengerLastMovement,
                 defenderAttackTimes = defenderMovement - defenderLastMovement;
@@ -124,8 +122,6 @@ namespace KrispyBotRW.Ninja {
                     Display.WithDamage(NinjaDisplay.Participant.Defender, defenderDamage,
                         defenderAttackTimes, defenderCriticalTimes);
                 }
-
-                Display.WithHealthBar(Challenger.CurrentHP, Defender.CurrentHP, Challenger.MaxHP, Defender.MaxHP);
                 
                 bool challengerKO = Challenger.CurrentHP <= 0, defenderKO = Defender.CurrentHP <= 0;
                 
@@ -145,6 +141,8 @@ namespace KrispyBotRW.Ninja {
                     defenderLastStand.ExtraData--;
                     defenderKO = false;
                 }
+
+                Display.WithHealthBar(Challenger.CurrentHP, Defender.CurrentHP, Challenger.MaxHP, Defender.MaxHP);
                 
                 if (challengerKO || defenderKO) {
                     Display.WithKOMessage(challengerKO, defenderKO);

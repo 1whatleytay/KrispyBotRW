@@ -88,9 +88,9 @@ namespace KrispyBotRW.Ninja {
                 .Build();
         }
         
-        public static Dictionary<ulong, NinjaProfile> Profiles = new Dictionary<ulong, NinjaProfile>() {
+        public static readonly Dictionary<ulong, NinjaProfile> Profiles = new Dictionary<ulong, NinjaProfile> {
             {414619400742633493, new NinjaProfile(414619400742633493) {
-                Level = NinjaLevel.Levels[11],
+                Level = NinjaLevel.Levels[14],
                 MaxHP = 900, CurrentHP = 900,
                 MaxStamina = 50, CurrentStamina = 50,
                 HitMinimum = 50, HitMaximum = 70,

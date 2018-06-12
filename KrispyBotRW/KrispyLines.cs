@@ -13,6 +13,7 @@ namespace KrispyBotRW {
         public static readonly string[] NinjaDodges = File.ReadAllLines("Lines/ninja-dodges.txt");
 
         public static readonly string Help = File.ReadAllText("Lines/help.txt");
+        public static readonly string NinjaHelp = File.ReadAllText("Lines/ninja-help.txt");
         public static readonly string NSFW = File.ReadAllText("Lines/nsfw.txt");
 
         public static string CapitalizeAll(string name) {

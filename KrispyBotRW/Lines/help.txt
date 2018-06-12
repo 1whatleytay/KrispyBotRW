@@ -1,4 +1,4 @@
-Here's what I know I can do (as long as you prefix it with `@Krispy Bot#8270`):
+Here's what I know I can do (as long as you prefix it with `$`):
  ```
  [help] - Lists all comm- okay why do people even write this here?
  [plays] <game/games> - Adds a game to your role list (you will be notified when someone mentions the group).

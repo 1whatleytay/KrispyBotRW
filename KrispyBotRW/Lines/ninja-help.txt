@@ -1,0 +1,21 @@
+The ninja game is in beta, so don't expect everything to work perfectly.
+Here are some commands you might find useful on your ninja adventures:
+```
+ [ninja/nj] <opponent> - Have your ninja attack your opponent and duke it out until one gives up.
+ [nj-show] (target) - Check stats for your or someone else's ninja. Use this to plan your battles carefully.
+ [nj-message] <message> - Change your challenge message so it'll say something different everytime someone attacks you.
+ [nj-help] - Self explanatory. Study up on your ninja skills here!
+```
+
+How the ninja game works:
+After you challenge an opponent (or someone challenges you) with `$ninja`, your two ninjas will duke it out until one of them faints.
+A victor is determined by each ninja's stats and a some luck. Here's a list of stats and what they do:
+HP - A measurement of how much damage a ninja can take before they KO. When your HP reaches 0, you lose.
+Stamina - A measurement of how many turns a ninja can go in battle before getting "slow." A slow ninja will not attack as fast.
+Min/Max Hit - The minimum and maximum damage a ninja can do. 
+Speed - How long it takes your ninja to make a move. The lower the better.
+
+As battles are played out, both players gain experience points and climb up levels.
+Every time you level up, you are given a skill, they do different cool things depending on what you get.
+
+Secret message hehehe
