@@ -15,7 +15,7 @@
             new NinjaLevel("Professional Ninja", 880),
             new NinjaLevel("Shadow Walker", 1000), 
             new NinjaLevel("Master of Stealth", 1200),
-            new NinjaLevel("Hidden Warrior", 1450), 
+            new NinjaLevel("Hidden Warrior", 1450),
             new NinjaLevel("Black Belt in Ninja Star Making", 1750),
             new NinjaLevel("Warrior of the Night", 2000), 
             new NinjaLevel("As Fast as Lightning", 2250),

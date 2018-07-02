@@ -106,6 +106,18 @@ namespace KrispyBotRW.Ninja {
                 Speed = 2,
                 
                 ChallengeMessage = "Oh no im just a puny eris bot have mercy"
+            }},
+            {221423180722601984, new NinjaProfile(221423180722601984) {
+                    Level = NinjaLevel.Levels[14],
+                MaxHP = 999999999, CurrentHP = 999999999,
+                
+                Skills = {
+                    new NinjaSkill(NinjaSkillBase.Random()) { Level = 3 },
+                    new NinjaSkill(NinjaSkillBase.Random()) { Level = 3 },
+                    new NinjaSkill(NinjaSkillBase.Random()) { Level = 3 }
+                },
+                 
+                ChallengeMessage = "Lol are you ready for crippling depression"
             }}
         };
 

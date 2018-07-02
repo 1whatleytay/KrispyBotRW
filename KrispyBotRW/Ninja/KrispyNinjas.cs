@@ -64,6 +64,11 @@ namespace KrispyBotRW.Ninja {
             }
         }
 
+        [Command("ninja Tif")]
+        public async Task NinjaWoah(SocketUser user) {
+            
+        }
+        
         [Command("nj-show")]
         public async Task NinjaShow() { NinjaShow(Context.User); }
 

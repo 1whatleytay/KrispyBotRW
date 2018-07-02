@@ -18,7 +18,8 @@ namespace KrispyBotRW {
             413835679437422593,
             413835819074191361,
             413835787755323392,
-            413835737826328588
+            413835737826328588,
+            463437914928578560
         };
 
         private enum ClassName {
@@ -33,6 +34,7 @@ namespace KrispyBotRW {
             Music,
             Drama,
             VisualArts,
+            Civics
         }
         
         [Command("schedule")]
@@ -50,6 +52,7 @@ namespace KrispyBotRW {
             if (schedule.Contains("french"))  roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.French]));
             if (schedule.Contains("strings")) roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Strings]));
             if (schedule.Contains("music"))   roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Music]));
+            if (schedule.Contains("civic"))   roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Civics]));
             if (schedule.Contains("art")) {
                 roles.Add(schedule.Contains("theatre")
                     ? Context.Guild.GetRole(_classes[(int) ClassName.Drama])
