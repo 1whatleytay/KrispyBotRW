@@ -3,7 +3,8 @@ Here's what I know I can do (as long as you prefix it with `$`):
  [help] - Lists all comm- okay why do people even write this here?
  [plays] <game/games> - Adds a game to your role list (you will be notified when someone mentions the group).
  [nplays] <game/games> - Removes a game from your role list.
- [schedule] <classes> - Resets your role to match your schedule, postfix your classes at the end of the command.
+ [schedule] <classes> - Disabled for the summer (and also because David broke it smh).
+ [civics] - Gives you the civics role for your summer civics class.
  [nickname] <new nickname> - Resets your server nickname.
  [nsfw] - Opt into the NSFW channel. Beware, you won't be able to undo this (unless you ask a mod)!
  [ninja] <mention> - Engage your friend in a duel to the death between each other's ninjas.
