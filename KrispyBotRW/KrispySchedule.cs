@@ -38,10 +38,10 @@ namespace KrispyBotRW {
 //            Civics
 //        }
 
-        [Command("civics")]
+        [Command("careers")]
         public async Task AddCivics() {
             await ((IGuildUser) Context.User).AddRoleAsync(Context.Guild.GetRole(463437914928578560));
-            await ReplyAsync(KrispyGenerator.PickLine(KrispyLines.Civics));
+            await ReplyAsync(KrispyGenerator.PickLine(KrispyLines.Careers));
         }
 
         [Command("civic")]
