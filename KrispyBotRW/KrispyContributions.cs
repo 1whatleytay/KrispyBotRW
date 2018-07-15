@@ -86,31 +86,26 @@ namespace KrispyBotRW {
 
         [Command("leaderboard")]
         public async Task ShowLeaderboard() {
-            try {
-                var builder = new StringBuilder("```\n");
-                var profileValues = new ContributionProfile[Profiles.Values.Count];
-                Profiles.Values.CopyTo(profileValues, 0);
-                Array.Sort(profileValues, (x, y) => y.GetScore() - x.GetScore());
-                foreach (var profile in profileValues) {
-                    var user = Context.Guild.GetUser(profile.UserId);
-                    if (user == null) continue;
-                    bool isAdminOrMod = false;
-                    foreach (var role in Context.Guild.Roles)
-                        if (role.Id == 378339275189518336 || role.Id == 378339453166682112) {
-                            isAdminOrMod = true;
-                            break;
-                        }
-                    if (isAdminOrMod) return;
-                    builder.Append(
-                        (user.Username + "#" + user.Discriminator).PadRight(30) + " | " +
-                        profile.GetScore().ToString().PadLeft(10) + "\n");
-                }
-                if (Profiles.Count == 0) builder.Append("Nothing yet!");
-                builder.Append("```");
-                await ReplyAsync(builder.ToString());
-            } catch (Exception e) {
-                await ReplyAsync(e.Message + "\n```\n" + e.StackTrace + "\n```"); 
+            var builder = new StringBuilder("```\n");
+            var profileValues = new ContributionProfile[Profiles.Values.Count];
+            Profiles.Values.CopyTo(profileValues, 0);
+            Array.Sort(profileValues, (x, y) => y.GetScore() - x.GetScore());
+            foreach (var profile in profileValues) {
+                var user = Context.Guild.GetUser(profile.UserId);
+                if (user == null) continue;
+                bool isAdminOrMod = false;
+                foreach (var role in Context.Guild.Roles)
+                    if (role.Id == 378339275189518336 || role.Id == 378339453166682112) {
+                        isAdminOrMod = true;
+                        break;
+                    }
+                if (isAdminOrMod) break;
+                builder.Append(
+                    (user.Username + "#" + user.Discriminator).PadRight(30) + " | " +
+                    profile.GetScore().ToString().PadLeft(10) + "\n");
             }
+            builder.Append("```");
+            await ReplyAsync(builder.ToString());
         }
     }
 }
