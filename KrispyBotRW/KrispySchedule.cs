@@ -45,7 +45,7 @@ namespace KrispyBotRW {
         }
 
         [Command("civic")]
-        public async Task AddCivic() { AddCivics(); }
+        public async Task AddCivic() { await AddCivics(); }
 
 //        public async Task RemoveScheduleRoles() {
 //            var discardRoles = new List<SocketRole>();

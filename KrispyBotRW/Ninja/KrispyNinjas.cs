@@ -63,14 +63,9 @@ namespace KrispyBotRW.Ninja {
                 await ReplyAsync(e.Message + "\n```\n" + e.StackTrace + "\n```");
             }
         }
-
-        [Command("ninja Tif")]
-        public async Task NinjaWoah(SocketUser user) {
-            
-        }
         
         [Command("nj-show")]
-        public async Task NinjaShow() { NinjaShow(Context.User); }
+        public async Task NinjaShow() { await NinjaShow(Context.User); }
 
         [Command("nj-help")]
         public async Task NinjaHelp() {
