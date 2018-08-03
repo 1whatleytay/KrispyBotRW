@@ -24,8 +24,7 @@ namespace KrispyBotRW {
 
             public void NewMessage(int withImages) {
                 Images += withImages;
-                if (!CheckTime()) return;
-                Messages++;
+                if (CheckTime()) Messages++;
             }
             public void GiftPoints(int points) { Gifted += points; }
 

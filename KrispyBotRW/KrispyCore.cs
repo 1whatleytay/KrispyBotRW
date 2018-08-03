@@ -24,8 +24,6 @@ namespace KrispyBotRW {
 
         private string Token;
         
-        public delegate void KrispyMessageCallback(SocketMessage message, object userData);
-        
         private static Task Log(LogMessage msg) {
             Console.WriteLine(msg.Message);
             return Task.CompletedTask;

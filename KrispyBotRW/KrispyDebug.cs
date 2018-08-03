@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,11 +19,8 @@ namespace KrispyBotRW {
         }
         
         [Command("probe")]
-        public async Task Probe() {
-            var builder = new StringBuilder();
-            foreach (var role in Context.Guild.Roles)
-                builder.Append(role.Name.PadRight(30) + " " + role.Id + "\n");
-            await ReplyAsync("```\n" + builder + "\n```");
+        public async Task Probe(string roleName) {
+            await ReplyAsync("```\n" + Context.Guild.Roles.FirstOrDefault(x => x.Name == roleName).Id + "\n```");
         }
         
         [Command("version")]

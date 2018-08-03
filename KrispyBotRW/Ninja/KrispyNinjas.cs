@@ -35,6 +35,7 @@ namespace KrispyBotRW.Ninja {
                 NinjaProfile.Profiles.Add(cprof.UserId, cprof);
             }
             fs.Close();
+            await ReplyAsync("Loaded!");
         }
 
         [Command("nj-save")]
