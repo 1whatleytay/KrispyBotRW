@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -106,7 +104,7 @@ namespace KrispyBotRW {
                 await ((IGuildUser) Context.User).AddRolesAsync(roles);
                 await ReplyAsync("Schedule updated! Your new classes have been added.");
             } else {
-                KrispyGames.AddGamesContext(Context, text);
+                await KrispyGames.AddGamesContext(Context, text);
             }
         }
 
@@ -117,7 +115,7 @@ namespace KrispyBotRW {
                 await ((IGuildUser) Context.User).RemoveRolesAsync(roles);
                 await ReplyAsync("Schedule updated! Your old classes have been removed.");
             } else {
-                KrispyGames.RemoveGamesContext(Context, text);
+                await KrispyGames.RemoveGamesContext(Context, text);
             }
         }
 

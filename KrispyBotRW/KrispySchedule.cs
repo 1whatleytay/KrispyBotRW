@@ -16,9 +16,11 @@ namespace KrispyBotRW {
             History = 487315862227779634,
             Science = 487319372428476417,
             Tech = 487319407920414720,
+            Foods = 487608334233370635,
             PhysEd = 487315912098054164,
             French = 487316015299035169,
             Strings = 487316120420745216,
+            Business = 487442657891581954,
             Drama = 487316161327792129,
             VisualArts = 487316241711890432,
             CivicsCareers = 487316213786083329,
@@ -27,7 +29,7 @@ namespace KrispyBotRW {
         public static List<ulong> FindRoleIds(string text) {
             var roles = new List<ulong>();
             if (text.Contains("math"))    roles.Add((ulong)ClassName.Math);
-            if (text.Contains("hist"))     roles.Add((ulong)ClassName.History);
+            if (text.Contains("hist"))    roles.Add((ulong)ClassName.History);
             if (text.Contains("sci"))     roles.Add((ulong)ClassName.Science);
             if (text.Contains("tech"))    roles.Add((ulong)ClassName.Tech);
             if (text.Contains("phys") ||
@@ -35,9 +37,12 @@ namespace KrispyBotRW {
                 text.Contains("gym"))     roles.Add((ulong)ClassName.PhysEd);
             if (text.Contains("eng"))     roles.Add((ulong)ClassName.English);
             if (text.Contains("french"))  roles.Add((ulong)ClassName.French);
-            if (text.Contains("string")) roles.Add((ulong)ClassName.Strings);
+            if (text.Contains("string"))  roles.Add((ulong)ClassName.Strings);
+            if (text.Contains("food"))    roles.Add((ulong)ClassName.Foods);
             if (text.Contains("civic") ||
-                text.Contains("career"))   roles.Add((ulong)ClassName.CivicsCareers);
+                text.Contains("career"))  roles.Add((ulong)ClassName.CivicsCareers);
+            if (text.Contains("bu") &&
+                text.Contains("s"))       roles.Add((ulong)ClassName.Business);
             if (text.Contains("art")) {
                 if (text.Contains("theatre") || text.Contains("drama")) roles.Add((ulong)ClassName.Drama);
                 else roles.Add((ulong)ClassName.VisualArts);

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
@@ -33,8 +33,21 @@ namespace KrispyBotRW {
             public ContributionProfile(ulong userId) { UserId = userId; }
         }
 
-        private static readonly Dictionary<ulong, ContributionProfile> Profiles
-            = new Dictionary<ulong, ContributionProfile>();
+        private static readonly Dictionary<ulong, Dictionary<ulong, ContributionProfile>> Profiles
+            = new Dictionary<ulong, Dictionary<ulong, ContributionProfile>>();
+
+        private static Dictionary<ulong, ContributionProfile> GetOrCreateServerProfile(ulong serverId) {
+            if (!Profiles.ContainsKey(serverId))
+                Profiles.Add(serverId, new Dictionary<ulong, ContributionProfile>());
+            return Profiles[serverId];
+        }
+
+        private static ContributionProfile GetOrCreateProfile(ulong serverId, ulong userId) {
+            var serverProfile = GetOrCreateServerProfile(serverId);
+            if (!serverProfile.ContainsKey(userId))
+                serverProfile.Add(userId, new ContributionProfile(userId));
+            return serverProfile[userId];
+        }
 
         private static readonly ulong[] BlockedChannels = {
             378337613087637505, // #bot-commands
@@ -45,8 +58,7 @@ namespace KrispyBotRW {
         public static void ProcessMessage(SocketMessage message) {
             if (BlockedChannels.Contains(message.Channel.Id)) return;
             var userId = message.Author.Id;
-            if (!Profiles.ContainsKey(userId)) Profiles.Add(userId, new ContributionProfile(userId));
-            Profiles[userId].NewMessage(message.Attachments.Count);
+            GetOrCreateProfile(((IGuildChannel)message.Channel).GuildId, userId).NewMessage(message.Attachments.Count);
         }
 
         [Command("ct-gift")]
@@ -55,8 +67,7 @@ namespace KrispyBotRW {
                 await ReplyAsync("Sorry, only admins can use this command.");
                 return;
             }
-            if (!Profiles.ContainsKey(user.Id)) Profiles.Add(user.Id, new ContributionProfile(user.Id));
-            Profiles[user.Id].GiftPoints(number);
+            GetOrCreateProfile(Context.Guild.Id, user.Id).GiftPoints(number);
             await ReplyAsync(";)");
         }
 
@@ -87,7 +98,7 @@ namespace KrispyBotRW {
         public async Task ShowLeaderboard() {
             var builder = new StringBuilder("```\n");
             var profileValues = new ContributionProfile[Profiles.Count];
-            Profiles.Values.CopyTo(profileValues, 0);
+            GetOrCreateServerProfile(Context.Guild.Id).Values.CopyTo(profileValues, 0);
             Array.Sort(profileValues, (x, y) => y.GetScore() - x.GetScore());
             Console.WriteLine(Profiles.Count);
             foreach (var profile in profileValues) {
