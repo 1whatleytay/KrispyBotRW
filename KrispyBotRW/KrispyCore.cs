@@ -92,15 +92,6 @@ namespace KrispyBotRW {
             StatusUpdates.Elapsed += UpdateStatus;
             NinjaUpdates.Elapsed += UpdateNinjas;
             HealUpdates.Elapsed += UpdateHeals;
-
-//            System.Threading.Thread.Sleep(4000);
-//
-//            await ((IMessageChannel) Client.GetChannel(378337310074339350)).SendMessageAsync(
-//                ":kiwi:");
-
-//            for (var i = 0; i < Client.Guilds.Count; i++) {
-//                Console.WriteLine("Guild Name: " + Client.Guilds[i]);
-//            }
             
             await Task.Delay(-1);
         }

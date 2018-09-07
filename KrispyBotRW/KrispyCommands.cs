@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +24,9 @@ namespace KrispyBotRW {
         }
 
         [Command("help")]
-        public async Task Help() { await ReplyAsync(KrispyLines.Help); }
+        public async Task Help() {
+            await ReplyAsync(KrispyLines.Help);
+        }
 
         private static string DigitName(char name) {
             switch (name) {
@@ -95,6 +99,28 @@ namespace KrispyBotRW {
             }
         }
 
+        [Command("add")]
+        public async Task AddRole([Remainder] string text) {
+            if (KrispySchedule.FindRoleIds(text).Count > 0) {
+                var roles = KrispySchedule.FindRoles(text, Context.Guild);
+                await ((IGuildUser) Context.User).AddRolesAsync(roles);
+                await ReplyAsync("Schedule updated! Your new classes have been added.");
+            } else {
+                KrispyGames.AddGamesContext(Context, text);
+            }
+        }
+
+        [Command("remove")]
+        public async Task RemoveRole([Remainder] string text) {
+            if (KrispySchedule.FindRoleIds(text).Count > 0) {
+                var roles = KrispySchedule.FindRoles(text, Context.Guild);
+                await ((IGuildUser) Context.User).RemoveRolesAsync(roles);
+                await ReplyAsync("Schedule updated! Your old classes have been removed.");
+            } else {
+                KrispyGames.RemoveGamesContext(Context, text);
+            }
+        }
+
         public static async Task<bool> Fun(DiscordSocketClient client, SocketMessage msg, int msgLoc) {
             var text = msg.ToString().ToLower().Substring(msgLoc);
             var components = text.Split(" ");
@@ -130,7 +156,13 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("Look who's talking.");
             else if (components.Contains("ur") && components.Contains("mom") && components.Contains("gay"))
                 await msg.Channel.SendMessageAsync("no u");
-            else return false;
+            else if (KrispySchedule.FindRoleIds(components[0]).Count == 1) {
+                var role = KrispySchedule.FindRoles(components[0],
+                    (SocketGuild)((IGuildChannel) msg.Channel).Guild)[0];
+                await ((IGuildUser) msg.Author).AddRoleAsync(role);
+                await msg.Channel.SendMessageAsync("Added " + role.Name + " to your schedule "
+                                                   + KrispyGenerator.PickLine(KrispyLines.Emoticon));
+            } else return false;
             return true;
         }
     }

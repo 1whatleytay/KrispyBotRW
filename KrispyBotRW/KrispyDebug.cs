@@ -19,7 +19,7 @@ namespace KrispyBotRW {
         }
         
         [Command("probe")]
-        public async Task Probe(string roleName) {
+        public async Task Probe([Remainder] string roleName) {
             await ReplyAsync("```\n" + Context.Guild.Roles.FirstOrDefault(x => x.Name == roleName).Id + "\n```");
         }
         

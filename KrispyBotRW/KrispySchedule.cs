@@ -1,115 +1,99 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ConstrainedExecution;
-
+using System.Text;
 using Discord;
 using Discord.WebSocket;
 using Discord.Commands;
 
 namespace KrispyBotRW {
     public class KrispySchedule : ModuleBase<SocketCommandContext> {
-//        private readonly ulong[] _classes = {
-//            413834803884982274,
-//            413834851611836416,
-//            413834751661572096,
-//            413835032264704014,
-//            413835097007980545,
-//            413835011666739220,
-//            413835556909219841,
-//            413835679437422593,
-//            413835819074191361,
-//            413835787755323392,
-//            413835737826328588,
-//            463437914928578560
-//        };
-//
-//        private enum ClassName {
-//            Math,
-//            Geo,
-//            Science,
-//            Tech,
-//            PhysEd,
-//            English,
-//            French,
-//            Strings,
-//            Music,
-//            Drama,
-//            VisualArts,
-//            Civics
-//        }
-
-        [Command("careers")]
-        public async Task AddCivics() {
-            await ((IGuildUser) Context.User).AddRoleAsync(Context.Guild.GetRole(463437914928578560));
-            await ReplyAsync(KrispyGenerator.PickLine(KrispyLines.Careers));
+        private enum ClassName : ulong {
+            English = 487315578156220416,
+            Math = 487315641745932298,
+            History = 487315862227779634,
+            Science = 487319372428476417,
+            Tech = 487319407920414720,
+            PhysEd = 487315912098054164,
+            French = 487316015299035169,
+            Strings = 487316120420745216,
+            Drama = 487316161327792129,
+            VisualArts = 487316241711890432,
+            CivicsCareers = 487316213786083329,
         }
 
-        [Command("civic")]
-        public async Task AddCivic() { await AddCivics(); }
+        public static List<ulong> FindRoleIds(string text) {
+            var roles = new List<ulong>();
+            if (text.Contains("math"))    roles.Add((ulong)ClassName.Math);
+            if (text.Contains("hist"))     roles.Add((ulong)ClassName.History);
+            if (text.Contains("sci"))     roles.Add((ulong)ClassName.Science);
+            if (text.Contains("tech"))    roles.Add((ulong)ClassName.Tech);
+            if (text.Contains("phys") ||
+                text.Contains("pys") ||
+                text.Contains("gym"))     roles.Add((ulong)ClassName.PhysEd);
+            if (text.Contains("eng"))     roles.Add((ulong)ClassName.English);
+            if (text.Contains("french"))  roles.Add((ulong)ClassName.French);
+            if (text.Contains("string")) roles.Add((ulong)ClassName.Strings);
+            if (text.Contains("civic") ||
+                text.Contains("career"))   roles.Add((ulong)ClassName.CivicsCareers);
+            if (text.Contains("art")) {
+                if (text.Contains("theatre") || text.Contains("drama")) roles.Add((ulong)ClassName.Drama);
+                else roles.Add((ulong)ClassName.VisualArts);
+            }
+            if (text.Contains("theatre") || text.Contains("drama"))
+                roles.Add((ulong)ClassName.Drama);
+            if (text.Contains("visual"))
+                roles.Add((ulong)ClassName.VisualArts);
+            return roles;
+        }
 
-//        public async Task RemoveScheduleRoles() {
-//            var discardRoles = new List<SocketRole>();
-//            foreach (var removeId in _classes)
-//                foreach (var roleId in ((IGuildUser)Context.User).RoleIds)
-//                    if (roleId == removeId) discardRoles.Add(Context.Guild.GetRole(removeId));
-//            await ((IGuildUser)Context.User).RemoveRolesAsync(discardRoles);
-//        }
+        public static List<SocketRole> FindRoles(string text, SocketGuild guild) {
+            var roleIds = FindRoleIds(text);
+            var roles = new List<SocketRole>();
+            foreach (var id in roleIds) roles.Add(guild.GetRole(id));
+            return roles;
+        }
+        
+        public static async Task RemoveScheduleRoles(SocketGuild guild, IGuildUser user) {
+            var discardRoles = new List<SocketRole>();
+            foreach (var removeId in Enum.GetValues(typeof(ClassName)))
+                foreach (var roleId in user.RoleIds)
+                    if (roleId == (ulong)removeId) discardRoles.Add(guild.GetRole((ulong)removeId));
+            await user.RemoveRolesAsync(discardRoles);
+        }
 
-//        [Command("schedule-clear")]
-//        public async Task ClearSchedule() {
-//            await RemoveScheduleRoles();
-//            await ReplyAsync("Schedule cleared! You won't be receiving any of those nasty notifs anymore.");
-//        }
-//        
-//        [Command("schedule")]
-//        public async Task Reschedule([Remainder] string schedule) {
-//            schedule = schedule.ToLower();
-//            var roles = new List<SocketRole>();
-//            if (schedule.Contains("math"))    roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Math]));
-//            if (schedule.Contains("geo"))     roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Geo]));
-//            if (schedule.Contains("sci"))     roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Science]));
-//            if (schedule.Contains("tech"))    roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Tech]));
-//            if (schedule.Contains("phys") ||
-//                schedule.Contains("pys") ||
-//                schedule.Contains("gym"))     roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.PhysEd]));
-//            if (schedule.Contains("eng"))     roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.English]));
-//            if (schedule.Contains("french"))  roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.French]));
-//            if (schedule.Contains("strings")) roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Strings]));
-//            if (schedule.Contains("music"))   roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Music]));
-//            if (schedule.Contains("civic"))   roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Civics]));
-//            if (schedule.Contains("art")) {
-//                roles.Add(schedule.Contains("theatre")
-//                    ? Context.Guild.GetRole(_classes[(int) ClassName.Drama])
-//                    : Context.Guild.GetRole(_classes[(int) ClassName.VisualArts]));
-//            } else if (schedule.Contains("theatre") || schedule.Contains("drama"))
-//                roles.Add(Context.Guild.GetRole(_classes[(int)ClassName.Drama]));
-//
-//            switch (roles.Count) {
-//                case 0:
-//                    await ReplyAsync("You didn't specify a single class... or maybe you did a typo?");
-//                    break;
-//                case 1:
-//                    if (roles[0].Id == 463437914928578560) {
-//                        await RemoveScheduleRoles();
-//                        await ((IGuildUser)Context.User).AddRoleAsync(roles[0]);
-//                        await ReplyAsync(KrispyGenerator.PickLine(CivicsFunLines));
-//                    }
-//                    else await ReplyAsync("I only saw one class. What kind of underachiever are you? Try again, buddy.");
-//                    break;
-//                case 2:
-//                    await ReplyAsync("Okay... two classes isn't alot. I don't reeeeeaaaaally believe you though. Maybe there's a typo?");
-//                    break;
-//                default:
-//                    if (roles.Count > 5) await ReplyAsync(
-//                        "Seriously? " + roles.Count + " classes? Does the school even allow that? Try again, maybe I read something wrong."
-//                        );
-//                    else {
-//                        await RemoveScheduleRoles();
-//                        await ((IGuildUser)Context.User).AddRolesAsync(roles);
-//                        await ReplyAsync("I've refreshed your schedule " + KrispyGenerator.PickLine(KrispyLines.Emoticon));
-//                    }
-//                    break;
-//            }
-//        }
+        [Command("schedule-clear")]
+        public async Task ClearSchedule() {
+            await RemoveScheduleRoles(Context.Guild, (IGuildUser)Context.User);
+            await ReplyAsync("Schedule cleared! You won't be receiving any of those nasty notifications anymore.");
+        }
+        
+        [Command("schedule")]
+        public async Task Reschedule([Remainder] string schedule) {
+            schedule = schedule.ToLower();
+            var roles = FindRoles(schedule, Context.Guild);
+            var guildUser = (IGuildUser) Context.User;
+            switch (roles.Count) {
+                case 0:
+                    await ReplyAsync(KrispyGenerator.PickLine(KrispyLines.Disappointed)
+                                     + " If you want to clear your schedule use $schedule-clear.");
+                    break;
+                case 1:
+                    await guildUser.AddRolesAsync(roles);
+                    await Context.Channel.SendMessageAsync("You're taking " + roles[0].Name + "? I've added that role for you.");
+                    break;
+                default:
+                    await RemoveScheduleRoles(Context.Guild, guildUser);
+                    await guildUser.AddRolesAsync(roles);
+                    var response = new StringBuilder("Here's your new schedule " +
+                                                     KrispyGenerator.PickLine(KrispyLines.Emoticon) + "\n```\n");
+                    foreach (var role in roles) response.Append("\t- " + role.Name + "\n");
+                    response.Append("```");
+                    await ReplyAsync(response.ToString());
+                    break;
+            }
+        }
     }
 }

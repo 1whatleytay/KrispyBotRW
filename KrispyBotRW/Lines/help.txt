@@ -1,16 +1,14 @@
 Here's what I know I can do (as long as you prefix it with `$`):
  ```
  [help] - Lists all comm- okay why do people even write this here?
- [plays] <game/games> - Adds a game to your role list (you will be notified when someone mentions the group).
- [nplays] <game/games> - Removes a game from your role list.
- [schedule] <classes> - Disabled for the summer (and also because David broke it smh).
- [civics] - Gives you the civics role for your summer civics class.
+ [play] <game/games> - Adds games to your role list (you will be notified when someone mentions the group).
+ [leave] <game/games> - Removes games from your role list.
+ [schedule] <classes> - Updates your schedule with new classes.
+ [add/remove] <games/classes> - Adds or removes roles.
  [nickname] <new nickname> - Resets your server nickname.
  [nsfw] - Opt into the NSFW channel. Beware, you won't be able to undo this (unless you ask a mod)!
  [ninja] <mention> - Engage your friend in a duel to the death between each other's ninjas.
  [leaderboard] - Show the activity leaderboard. See how you're comparing to other members.
  ```
- Hey, that's about all I know, but I'm working on it, okay?
- Try to speak to me generally, if I say I don't know what you're talking about, just remember I'm just a bot.
  
  Have an idea for a command? Go bother `@desgroup#0675` and he'll add it.
