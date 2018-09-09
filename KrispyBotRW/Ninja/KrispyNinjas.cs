@@ -23,9 +23,8 @@ namespace KrispyBotRW.Ninja {
             foreach (var profile in NinjaProfile.Profiles.Values)
                 profile.CurrentHP = Math.Min(profile.MaxHP, profile.CurrentHP + 3);
         }
-        
-        [Command("nj-load")]
-        public async Task NinjaLoad() {
+
+        public static void LoadStatic() {
             NinjaProfile.Profiles.Clear();
             var formatter = new BinaryFormatter();
             var fs = new FileStream("ninjas.bin", FileMode.Open, FileAccess.Read);
@@ -35,11 +34,9 @@ namespace KrispyBotRW.Ninja {
                 NinjaProfile.Profiles.Add(cprof.UserId, cprof);
             }
             fs.Close();
-            await ReplyAsync("Loaded!");
         }
 
-        [Command("nj-save")]
-        public async Task NinjaSave() {
+        public static void SaveStatic() {
             var formatter = new BinaryFormatter();
             var fs = new FileStream("ninjas.bin", FileMode.Create, FileAccess.Write);
             var saveProfiles = new List<NinjaSaveProfile>();
@@ -47,6 +44,17 @@ namespace KrispyBotRW.Ninja {
                 saveProfiles.Add(profile.CreateSaveProfile());
             formatter.Serialize(fs, saveProfiles);
             fs.Close();
+        }
+        
+        [Command("nj-load")]
+        public async Task NinjaLoad() {
+            LoadStatic();
+            await ReplyAsync("Loaded!");
+        }
+
+        [Command("nj-save")]
+        public async Task NinjaSave() {
+            SaveStatic();
             await ReplyAsync("Everything is saved. Feel free to reset the bot.");
         }
         

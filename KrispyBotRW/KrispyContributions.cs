@@ -33,21 +33,10 @@ namespace KrispyBotRW {
             public ContributionProfile(ulong userId) { UserId = userId; }
         }
 
-        private static readonly Dictionary<ulong, Dictionary<ulong, ContributionProfile>> Profiles
-            = new Dictionary<ulong, Dictionary<ulong, ContributionProfile>>();
-
-        private static Dictionary<ulong, ContributionProfile> GetOrCreateServerProfile(ulong serverId) {
-            if (!Profiles.ContainsKey(serverId))
-                Profiles.Add(serverId, new Dictionary<ulong, ContributionProfile>());
-            return Profiles[serverId];
-        }
-
-        private static ContributionProfile GetOrCreateProfile(ulong serverId, ulong userId) {
-            var serverProfile = GetOrCreateServerProfile(serverId);
-            if (!serverProfile.ContainsKey(userId))
-                serverProfile.Add(userId, new ContributionProfile(userId));
-            return serverProfile[userId];
-        }
+        private static readonly KrispyDict<KrispyDict<ContributionProfile>> Profiles
+            = new KrispyDict<KrispyDict<ContributionProfile>>(
+                x => new KrispyDict<ContributionProfile>(
+                    y => new ContributionProfile(x)));
 
         private static readonly ulong[] BlockedChannels = {
             378337613087637505, // #bot-commands
@@ -57,23 +46,24 @@ namespace KrispyBotRW {
         
         public static void ProcessMessage(SocketMessage message) {
             if (BlockedChannels.Contains(message.Channel.Id)) return;
-            var userId = message.Author.Id;
-            GetOrCreateProfile(((IGuildChannel)message.Channel).GuildId, userId).NewMessage(message.Attachments.Count);
+            Profiles.GetOrCreate(message.GuildId())
+                .GetOrCreate(message.Author.Id)
+                .NewMessage(message.Attachments.Count);
         }
 
         [Command("ct-gift")]
         public async Task GiftPoints(SocketUser user, int number) {
-            if (!KrispyCommands.UserIsKrispyAdmin(Context.User)) {
+            if (!Context.User.IsAdmin()) {
                 await ReplyAsync("Sorry, only admins can use this command.");
                 return;
             }
-            GetOrCreateProfile(Context.Guild.Id, user.Id).GiftPoints(number);
+            Profiles.GetOrCreate(Context.Guild.Id).GetOrCreate(user.Id).GiftPoints(number);
             await ReplyAsync(";)");
         }
 
         [Command("ct-clean")]
         public async Task CleanContributions(SocketUser user) {
-            if (!KrispyCommands.UserIsKrispyAdmin(Context.User)) {
+            if (!Context.User.IsAdmin()) {
                 await ReplyAsync("Sorry, only admins can use this command.");
                 return;
             }
@@ -86,7 +76,7 @@ namespace KrispyBotRW {
 
         [Command("ct-reset")]
         public async Task ResetContributions() {
-            if (!KrispyCommands.UserIsKrispyAdmin(Context.User)) {
+            if (!Context.User.IsAdmin()) {
                 await ReplyAsync("Sorry, only admins can use this command.");
                 return;
             }
@@ -94,26 +84,18 @@ namespace KrispyBotRW {
             await ReplyAsync("All contributions reset!");
         }
 
-        [Command("leaderboard")]
+        [Command("ct-leaderboard")]
         public async Task ShowLeaderboard() {
             var builder = new StringBuilder("```\n");
-            var profileValues = new ContributionProfile[Profiles.Count];
-            GetOrCreateServerProfile(Context.Guild.Id).Values.CopyTo(profileValues, 0);
+            var serverProfiles = Profiles.GetOrCreate(Context.Guild.Id);
+            var profileValues = new ContributionProfile[serverProfiles.Count];
+            serverProfiles.Values.CopyTo(profileValues, 0);
             Array.Sort(profileValues, (x, y) => y.GetScore() - x.GetScore());
-            Console.WriteLine(Profiles.Count);
             foreach (var profile in profileValues) {
                 var user = Context.Guild.GetUser(profile.UserId);
                 if (user == null) continue;
                 if (user.IsBot) continue;
-                var isAdminOrMod = false;
-                foreach (var role in user.Roles) {
-                    if (role.Id == 378339275189518336 || role.Id == 378339453166682112)
-                    {
-                        isAdminOrMod = true;
-                        break;
-                    }
-                }
-                if (isAdminOrMod) continue;
+                if (user.IsAdminOrMod()) continue;
                 builder.Append(
                     (user.Username + "#" + user.Discriminator).PadRight(30) + " | " +
                     profile.GetScore().ToString().PadLeft(10) + "\n");

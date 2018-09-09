@@ -9,7 +9,8 @@ namespace KrispyBotRW {
         public static readonly string[] Emoticon = File.ReadAllLines("Lines/emoticon.txt");
         public static readonly string[] Status = File.ReadAllLines("Lines/status.txt");
         public static readonly string[] Disappointed = File.ReadAllLines("Lines/disappointed.txt");
-        public static readonly string[] OpposingTeam = File.ReadAllLines("Lines/opposing.txt");
+        public static readonly string[] Opposing = File.ReadAllLines("Lines/opposing.txt");
+        public static readonly string[] Votes = File.ReadAllLines("Lines/votes.txt");
         public static readonly string[] NinjaSingle = File.ReadAllLines("Lines/ninja-attacks-single.txt");
         public static readonly string[] NinjaMultiple = File.ReadAllLines("Lines/ninja-attacks-multiple.txt");
         public static readonly string[] NinjaDodges = File.ReadAllLines("Lines/ninja-dodges.txt");

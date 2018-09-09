@@ -9,12 +9,11 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 
+using KrispyBotRW.Ninja;
+
 namespace KrispyBotRW {
     public class KrispyCommands : ModuleBase<SocketCommandContext> {
-        public static bool UserIsKrispyAdmin(SocketUser user) {
-            return ((IGuildUser) user).RoleIds.Contains(378339275189518336ul);
-        }
-        
+
         [Command("shutdown")]
         public async Task Shutdown() {
             await Context.Client.StopAsync();
@@ -41,7 +40,7 @@ namespace KrispyBotRW {
                 default: return "hmm"; // not sure how you'd trigger this but why not
             }
         }
-        
+
         [Command("big")]
         public async Task Big([Remainder] string text) {
             await Context.Message.DeleteAsync();
@@ -64,7 +63,7 @@ namespace KrispyBotRW {
         }
 
         private static bool DadJokesEnabled;
-        
+
         [Command("dad-jokes")]
         public async Task DadJokes(bool state) {
             DadJokesEnabled = state;
@@ -72,7 +71,6 @@ namespace KrispyBotRW {
         }
 
         private static async Task DadJokes(SocketMessage msg) {
-            // Dad jokes are fun
             if (!DadJokesEnabled) return;
             var messageText = msg.Content.ToLower() + " ";
             bool iAm = messageText.Contains("i am"), imA = messageText.Contains("i'm"), im = messageText.Contains("im");
@@ -80,7 +78,7 @@ namespace KrispyBotRW {
                 var firstStr = iAm ? "i am" : (imA ? "i'm" : "im");
                 int beg = messageText.IndexOf(firstStr) + firstStr.Length + 1, last = messageText.IndexOf(' ', beg);
                 await msg.Channel.SendMessageAsync("Hi, " + messageText.Substring(beg, last - beg) +
-                                             ". I'm dad.");
+                                                   ". I'm dad.");
             }
         }
 
@@ -91,10 +89,38 @@ namespace KrispyBotRW {
             KrispyContributions.ProcessMessage(msg);
 
             if (msg.Channel.Id == 434090042408042506) {
-                var eventMessage = (SocketUserMessage)msg;
+                var eventMessage = (SocketUserMessage) msg;
                 await eventMessage.AddReactionAsync(ThumbsUp);
                 await eventMessage.AddReactionAsync(ThumbsDown);
             }
+        }
+
+        [Command("setup")]
+        public async Task Setup() {
+            var answer = await ReplyAsync("Hold on...");
+            var content = new StringBuilder();
+            var text = "Setup...";
+            void OK() { content.Append(" OK\n"); }
+            void Failed() { content.Append(" FAILED\n"); }
+            void Update() { answer.ModifyAsync(x => x.Content = text + "\n```\n" + content.ToString() + "\n```"); }
+            try {
+                content.Append("\t - Loading Ninja Saves..."); Update();
+                KrispyNinjas.LoadStatic(); OK();
+                
+                content.Append("\t - Loading Candidates..."); Update();
+                foreach (var guild in Context.Client.Guilds)
+                    if (guild != null)
+                        KrispyVote.GenNamesStatic(guild);
+                OK();
+            } catch (Exception e) {
+                Console.WriteLine(e.StackTrace);
+                Failed();
+                text = "Failed.";
+                Update();
+                return;
+            }
+            text = "Finished.";
+            Update();
         }
 
         [Command("add")]
@@ -103,7 +129,8 @@ namespace KrispyBotRW {
                 var roles = KrispySchedule.FindRoles(text, Context.Guild);
                 await ((IGuildUser) Context.User).AddRolesAsync(roles);
                 await ReplyAsync("Schedule updated! Your new classes have been added.");
-            } else {
+            }
+            else {
                 await KrispyGames.AddGamesContext(Context, text);
             }
         }
@@ -114,7 +141,8 @@ namespace KrispyBotRW {
                 var roles = KrispySchedule.FindRoles(text, Context.Guild);
                 await ((IGuildUser) Context.User).RemoveRolesAsync(roles);
                 await ReplyAsync("Schedule updated! Your old classes have been removed.");
-            } else {
+            }
+            else {
                 await KrispyGames.RemoveGamesContext(Context, text);
             }
         }
@@ -132,7 +160,7 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("It is February " +
                                                    (int) (DateTime.Now - new DateTime(2018, 2, 1)).TotalDays +
                                                    ", 2018.");
-           else if (text.Contains("what") && components.Contains("love"))
+            else if (text.Contains("what") && components.Contains("love"))
                 await msg.Channel.SendMessageAsync("Baby don't hurt me.");
             else if (components.Contains("donut") || components.Contains("doughnut"))
                 await msg.Channel.SendMessageAsync(":doughnut:");
@@ -142,12 +170,13 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("Correct! Good job... Here's a doughnut: :doughnut:.");
             else if (components.Contains("inspire")) {
                 string inspiroBotUrl;
-                var request = (HttpWebRequest)WebRequest.Create("http://inspirobot.me/api?generate=true&oy=vey");
-                using (var response = (HttpWebResponse)request.GetResponse())
+                var request = (HttpWebRequest) WebRequest.Create("http://inspirobot.me/api?generate=true&oy=vey");
+                using (var response = (HttpWebResponse) request.GetResponse())
                 using (var stream = response.GetResponseStream())
                 using (var reader = new StreamReader(stream)) {
                     inspiroBotUrl = reader.ReadToEnd();
                 }
+
                 await msg.Channel.SendMessageAsync(inspiroBotUrl);
             }
             else if (components.Contains("bitch"))
@@ -156,11 +185,13 @@ namespace KrispyBotRW {
                 await msg.Channel.SendMessageAsync("no u");
             else if (KrispySchedule.FindRoleIds(components[0]).Count == 1) {
                 var role = KrispySchedule.FindRoles(components[0],
-                    (SocketGuild)((IGuildChannel) msg.Channel).Guild)[0];
+                    (SocketGuild) ((IGuildChannel) msg.Channel).Guild)[0];
                 await ((IGuildUser) msg.Author).AddRoleAsync(role);
                 await msg.Channel.SendMessageAsync("Added " + role.Name + " to your schedule "
                                                    + KrispyGenerator.PickLine(KrispyLines.Emoticon));
-            } else return false;
+            }
+            else return false;
+
             return true;
         }
     }
