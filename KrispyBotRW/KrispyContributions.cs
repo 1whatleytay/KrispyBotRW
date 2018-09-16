@@ -84,7 +84,7 @@ namespace KrispyBotRW {
             await ReplyAsync("All contributions reset!");
         }
 
-        [Command("ct-leaderboard")]
+        [Command("leaderboard")]
         public async Task ShowLeaderboard() {
             var builder = new StringBuilder("```\n");
             var serverProfiles = Profiles.GetOrCreate(Context.Guild.Id);
@@ -95,7 +95,7 @@ namespace KrispyBotRW {
                 var user = Context.Guild.GetUser(profile.UserId);
                 if (user == null) continue;
                 if (user.IsBot) continue;
-                if (user.IsAdminOrMod()) continue;
+                if (user.IsAdmin()) continue;
                 builder.Append(
                     (user.Username + "#" + user.Discriminator).PadRight(30) + " | " +
                     profile.GetScore().ToString().PadLeft(10) + "\n");

@@ -3,6 +3,7 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 using Discord;
 using Discord.Commands;
@@ -108,21 +109,18 @@ namespace KrispyBotRW {
             await ReplyAsync("Profile cleared.");
         }
 
-        [Command("vt-profile")]
+        [Command("profile")]
         public async Task ForceProfile(SocketUser user) {
-            if (!Context.User.IsAdmin()) {
-                await ReplyAsync("Only admins can use this command.");
-                return;
-            }
-
-            var guildUser = (IGuildUser) user;
+           var guildUser = (IGuildUser) user;
             var profile = Profiles.GetOrCreate(Context.Guild.Id).GetOrCreate(user.Id);
             var desc = new StringBuilder();
 
             desc.Append("Voted For:\n");
             foreach (var voted in profile.VotedFor) {
                 if (voted == NullVoter) continue;
-                var nick = KrispyNickname.NickName(Context.Guild.GetUser(voted).Nickname);
+                var voteUser = Context.Guild.GetUser(voted);
+                if (voteUser == null) continue;
+                var nick = KrispyNickname.NickName(voteUser.Nickname);
                 desc.Append("\t" + nick + "\n");
             }
             
@@ -143,6 +141,12 @@ namespace KrispyBotRW {
                 .Build();
 
             await ReplyAsync("", false, embed);
+        }
+        
+        [Command("profile")]
+        public async Task ShowProfile(string candidate) {
+            var user = await GetUserByCandidate(candidate);
+            if (user != null) await ForceProfile(user);
         }
 
         [Command("vt-vote")]
@@ -196,54 +200,36 @@ namespace KrispyBotRW {
             return null;
         }
         
-        [Command("profile")]
-        public async Task ShowProfile(SocketUser user) {
-            var guildUser = (IGuildUser) user;
-            var profile = Profiles.GetOrCreate(Context.Guild.Id).GetOrCreate(user.Id);
-            await ReplyAsync("```\n" +
-                             guildUser.Nickname +
-                             " - Votes: " + profile.WasVotedBy.Count +
-                             " Votes Used: " + profile.VotedFor.Count +
-                             "/" + profile.MaxVotes +
-                             "\n```");
-        }
-        
-        [Command("profile")]
-        public async Task ShowProfile(string candidate) {
-            var user = await GetUserByCandidate(candidate);
-            if (user != null) await ShowProfile(user);
-        }
-        
-        [Command("vote")]
-        public async Task Vote(SocketUser user) {
-            var serverProfile = Profiles.GetOrCreate(Context.Guild.Id);
-            var voter = serverProfile.GetOrCreate(Context.User.Id);
-            var voted = serverProfile.GetOrCreate(user.Id);
-            if (voter == voted) {
-                await ReplyAsync("Hey, d-don't vote for yourself... b-baka");
-            } else if (voter.VotedFor.Count >= voter.MaxVotes) {
-                await ReplyAsync("You already voted too many times, stupid!");
-            } else if (user.IsAdmin()) {
-                await ReplyAsync(user.Username + " is already an admin! You'll get me in trouble!");
-            } else if (user.Id == Context.Client.CurrentUser.Id) {
-                await ReplyAsync("Y-you want me!? *blushes* B-but I can't...");
-            } else if (user.IsBot) {
-                await ReplyAsync("You want another bot? :sob: I won't let you!");
-            } else {
-                voter.VotedFor.Add(voted.UserId);
-                voted.WasVotedBy.Add(voter.UserId);
-                //await Context.Message.DeleteAsync();
-                await ReplyAsync(KrispyGenerator.PickLine(KrispyLines.Votes));
-            }
-        }
+//        [Command("vote")]
+//        public async Task Vote(SocketUser user) {
+//            var serverProfile = Profiles.GetOrCreate(Context.Guild.Id);
+//            var voter = serverProfile.GetOrCreate(Context.User.Id);
+//            var voted = serverProfile.GetOrCreate(user.Id);
+//            if (voter == voted) {
+//                await ReplyAsync("Hey, d-don't vote for yourself... b-baka");
+//            } else if (voter.VotedFor.Count >= voter.MaxVotes) {
+//                await ReplyAsync("You already voted too many times, stupid!");
+//            } else if (user.IsAdmin()) {
+//                await ReplyAsync(user.Username + " is already an admin! You'll get me in trouble!");
+//            } else if (user.Id == Context.Client.CurrentUser.Id) {
+//                await ReplyAsync("Y-you want me!? *blushes* B-but I can't...");
+//            } else if (user.IsBot) {
+//                await ReplyAsync("You want another bot? :sob: I won't let you!");
+//            } else {
+//                voter.VotedFor.Add(voted.UserId);
+//                voted.WasVotedBy.Add(voter.UserId);
+//                //await Context.Message.DeleteAsync();
+//                await ReplyAsync(KrispyGenerator.PickLine(KrispyLines.Votes));
+//            }
+//        }
+//
+//        [Command("vote")]
+//        public async Task Vote(string candidate) {
+//            var user = await GetUserByCandidate(candidate);
+//            if (user != null) await Vote(user);
+//        }
 
-        [Command("vote")]
-        public async Task Vote(string candidate) {
-            var user = await GetUserByCandidate(candidate);
-            if (user != null) await Vote(user);
-        }
-
-        [Command("leaderboard")]
+        [Command("vt-leaderboard")]
         public async Task ShowLeaderboard() {
             var builder = new StringBuilder();
             builder.Append("```\n");
@@ -252,9 +238,9 @@ namespace KrispyBotRW {
             serverProfiles.Values.CopyTo(profileValues, 0);
             Array.Sort(profileValues, (x, y) => y.WasVotedBy.Count - x.WasVotedBy.Count);
             foreach (var profile in profileValues) {
-                Console.WriteLine();
                 if (profile.WasVotedBy.Count < 1) continue;
                 var user = Context.Guild.GetUser(profile.UserId);
+                if (user == null) continue;
                 var name = KrispyNickname.NickName(user.Nickname);
                 builder.Append(name.PadRight(20) + " | " + profile.WasVotedBy.Count.ToString().PadLeft(4) + "\n");
             }
