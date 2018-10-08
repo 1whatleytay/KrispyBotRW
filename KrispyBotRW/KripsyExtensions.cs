@@ -14,9 +14,7 @@ namespace KrispyBotRW {
         public T GetOrCreate(ulong id) {
             if (!ContainsKey(id)) {
                 Add(id, cons(id));
-                Console.WriteLine("Created new for: " + id + " Dict: " + this);
             }
-            Console.WriteLine("Returning: " + id);
             return this[id];
         }
         

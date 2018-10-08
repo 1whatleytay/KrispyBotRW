@@ -36,7 +36,7 @@ namespace KrispyBotRW {
         private static readonly KrispyDict<KrispyDict<ContributionProfile>> Profiles
             = new KrispyDict<KrispyDict<ContributionProfile>>(
                 x => new KrispyDict<ContributionProfile>(
-                    y => new ContributionProfile(x)));
+                    y => new ContributionProfile(y)));
 
         private static readonly ulong[] BlockedChannels = {
             378337613087637505, // #bot-commands
