@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
+using System.Text.RegularExpressions;
+
 using Discord;
 using Discord.WebSocket;
 using Discord.Commands;
@@ -24,17 +26,28 @@ namespace KrispyBotRW {
             Drama = 487316161327792129,
             VisualArts = 487316241711890432,
             CivicsCareers = 487316213786083329,
+            Biology = 542090296826265614,
+            Chemistry = 542090306569633794,
+            Physics = 542090309249662976,
         }
 
         public static List<ulong> FindRoleIds(string text) {
             var roles = new List<ulong>();
+            // I should come up with rules for this instead of a bunch of text.Contains...
             if (text.Contains("math"))    roles.Add((ulong)ClassName.Math);
             if (text.Contains("hist"))    roles.Add((ulong)ClassName.History);
             if (text.Contains("sci"))     roles.Add((ulong)ClassName.Science);
             if (text.Contains("tech"))    roles.Add((ulong)ClassName.Tech);
-            if (text.Contains("phys") ||
-                text.Contains("pys") ||
-                text.Contains("gym"))     roles.Add((ulong)ClassName.PhysEd);
+            if ((text.Contains("phys") ||
+                 text.Contains("pys")) &&
+                 text.Contains("ed") ||
+                 text.Contains("gym"))    roles.Add((ulong)ClassName.PhysEd);
+            if ((text.Contains("phys") ||
+                 text.Contains("pys")) &&
+                 (!text.Contains("ed") ||
+                 Regex.Matches(text, "phys").Count >= 2 ||
+                 Regex.Matches(text, "pys").Count >= 2))
+                                                roles.Add((ulong)ClassName.Physics);
             if (text.Contains("eng"))     roles.Add((ulong)ClassName.English);
             if (text.Contains("french"))  roles.Add((ulong)ClassName.French);
             if (text.Contains("string"))  roles.Add((ulong)ClassName.Strings);
@@ -43,6 +56,8 @@ namespace KrispyBotRW {
                 text.Contains("career"))  roles.Add((ulong)ClassName.CivicsCareers);
             if (text.Contains("bu") &&
                 text.Contains("s"))       roles.Add((ulong)ClassName.Business);
+            if (text.Contains("bio"))     roles.Add((ulong)ClassName.Biology);
+            if (text.Contains("chem"))    roles.Add((ulong)ClassName.Chemistry);
             if (text.Contains("art")) {
                 if (text.Contains("theatre") || text.Contains("drama")) roles.Add((ulong)ClassName.Drama);
                 else roles.Add((ulong)ClassName.VisualArts);

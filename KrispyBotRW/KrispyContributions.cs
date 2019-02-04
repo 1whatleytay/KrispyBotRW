@@ -70,7 +70,7 @@ namespace KrispyBotRW {
             if (!Profiles.ContainsKey(user.Id)) await ReplyAsync("I couldn't find the user you were talking about :(");
             else {
                 Profiles.Remove(user.Id);
-                await ReplyAsync("I removed all their contrbutions " + KrispyGenerator.PickLine(KrispyLines.Emoticon));
+                await ReplyAsync("I removed all their contributions " + KrispyGenerator.PickLine(KrispyLines.Emoticon));
             }
         }
 
