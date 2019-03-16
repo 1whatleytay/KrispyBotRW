@@ -86,6 +86,10 @@ namespace KrispyBotRW {
 
         [Command("leaderboard")]
         public async Task ShowLeaderboard() {
+            if (!Context.User.IsAdmin()) {
+                await ReplyAsync("The leaderboard is currently disabled.");
+                return;
+            }
             var builder = new StringBuilder("```\n");
             var serverProfiles = Profiles.GetOrCreate(Context.Guild.Id);
             var profileValues = new ContributionProfile[serverProfiles.Count];
