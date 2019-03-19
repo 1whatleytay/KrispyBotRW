@@ -51,6 +51,34 @@ namespace KrispyBotRW {
                 .NewMessage(message.Attachments.Count);
         }
 
+        [Command("dj")]
+        public async Task MakeDJ() {
+            var djRoleId = 378948854000648193ul;
+            var djRole = Context.Guild.GetRole(djRoleId);
+            var user = ((IGuildUser) Context.User);
+            if (user.RoleIds.Contains(djRoleId)) {
+                await user.RemoveRoleAsync(djRole);
+                await ReplyAsync("You are no longer a DJ. DRINNGGGG *that's my best impression of mozart*");
+            } else {
+                await user.AddRoleAsync(djRole);
+                await ReplyAsync("You are a DJ. Congrats!");
+            }
+        }
+        
+        [Command("streamer")]
+        public async Task MakeStreamer() {
+            var streamerRoleId = 443517231268233226ul;
+            var streamerRole = Context.Guild.GetRole(streamerRoleId);
+            var user = ((IGuildUser) Context.User);
+            if (user.RoleIds.Contains(streamerRoleId)) {
+                await user.RemoveRoleAsync(streamerRole);
+                await ReplyAsync("You are not a streamer. Never was, never will be.");
+            } else {
+                await user.AddRoleAsync(streamerRole);
+                await ReplyAsync("You are a Streamer. Congrats!");
+            }
+        }
+
         [Command("ct-gift")]
         public async Task GiftPoints(SocketUser user, int number) {
             if (!Context.User.IsAdmin()) {
