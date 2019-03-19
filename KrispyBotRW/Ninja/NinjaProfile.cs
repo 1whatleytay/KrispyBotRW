@@ -60,7 +60,12 @@ namespace KrispyBotRW.Ninja {
             IncreaseStats(exp / 10);
             ExpLevel += exp;
             CheckLevelIncreases(battleChannel);
-            Console.WriteLine("Exp: " + ExpLevel);
+        }
+
+        public void GiveExp(int exp) {
+            IncreaseStats(exp / 10);
+            ExpLevel += exp;
+            CheckLevelIncreases(null);
         }
         
         public void EndGame() {

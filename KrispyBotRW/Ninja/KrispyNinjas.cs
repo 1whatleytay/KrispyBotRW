@@ -72,6 +72,16 @@ namespace KrispyBotRW.Ninja {
                 await ReplyAsync(e.Message + "\n```\n" + e.StackTrace + "\n```");
             }
         }
+
+        [Command("nj-exp")]
+        public async Task NinjaGive(SocketUser user, int exp) {
+            if (!Context.User.IsAdmin()) {
+                await ReplyAsync("Sorry, only admins can use this command.");
+                return;
+            }
+
+            NinjaProfile.GetOrCreate(user.Id)?.GiveExp(exp);
+        }
         
         [Command("nj-show")]
         public async Task NinjaShow() { await NinjaShow(Context.User); }
