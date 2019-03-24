@@ -145,8 +145,12 @@ namespace KrispyBotRW.Ninja {
                 Display.WithHealthBar(Challenger.CurrentHP, Defender.CurrentHP, Challenger.MaxHP, Defender.MaxHP);
                 
                 if (challengerKO || defenderKO) {
-                    Display.WithKOMessage(challengerKO, defenderKO);
+                    int challengerXp = Challenger.ExpLevel, defenderXp = Defender.ExpLevel;
                     EndGame(defenderKO, challengerKO);
+                    var challengerXpGained = Challenger.ExpLevel - challengerXp;
+                    var defenderXpGained = Defender.ExpLevel - defenderXp;
+                    Display.WithExpGained(challengerXpGained, defenderXpGained);
+                    Display.WithKOMessage(challengerKO, defenderKO);
                 }
             } else Display.WithHealthBar();
 

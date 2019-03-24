@@ -11,6 +11,7 @@ namespace KrispyBotRW.Ninja {
         public int MaxStamina = 10, CurrentStamina = 10;
         public int HitMinimum = 2, HitMaximum = 5;
         public double Speed = 2.5;
+        public int Tokens = 0;
         
         public int ExpLevel;
         public NinjaLevel Level;
@@ -40,7 +41,7 @@ namespace KrispyBotRW.Ninja {
             if (val >= 0 && val < 0.5)
             { MaxHP++; CurrentHP++; }
             else if (val >= 0.5 && val < 0.65)
-                Speed *= 0.98;
+                Speed = Math.Max(Speed * 0.98, 0.00001);
             else if (val >= 0.65 && val < 0.80)
                 MaxStamina++;
             else if (val >= 0.80 && val < 0.92)
@@ -57,6 +58,7 @@ namespace KrispyBotRW.Ninja {
                 (didWin ? 8 : 3) *
                 Math.Max(opponentLevel - Level.Number, 0) * 5
                 + 2 * lengthOfBattle - MaxStamina, 5) + KrispyGenerator.NumberBetween(5, 25);
+            exp = (int)(exp * (1.0 + 0.01 * Tokens));
             IncreaseStats(exp / 10);
             ExpLevel += exp;
             CheckLevelIncreases(battleChannel);
@@ -66,6 +68,27 @@ namespace KrispyBotRW.Ninja {
             IncreaseStats(exp / 10);
             ExpLevel += exp;
             CheckLevelIncreases(null);
+        }
+
+        public int Prestige() {
+            if (Level.Number == 0) return 0;
+
+            // Create Tokens
+            var tokensEarned = (int) Math.Pow(2, Level.Number - 1);
+            Tokens += tokensEarned;
+
+            // Reset Everything
+            ExpLevel = 0;
+            Level = NinjaLevel.Levels[0];
+            MaxHP = 30;
+            CurrentHP = 30;
+            MaxStamina = 10;
+            CurrentStamina = 10;
+            HitMinimum = 2;
+            HitMaximum = 5;
+            Speed = 2.5;
+            
+            return tokensEarned;
         }
         
         public void EndGame() {
@@ -89,6 +112,7 @@ namespace KrispyBotRW.Ninja {
                                  "Stamina: " + MaxStamina + "\n" +
                                  "Damage: " + HitMinimum + " - " + HitMaximum + "\n" +
                                  "Speed: " + Speed + "\n" +
+                                 "Prestige Tokens: " + Tokens + "\n" +
                                  skillDisplay)
                 .Build();
         }

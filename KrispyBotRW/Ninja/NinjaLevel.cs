@@ -20,6 +20,10 @@
             new NinjaLevel("Warrior of the Night", 2000), 
             new NinjaLevel("As Fast as Lightning", 2250),
             new NinjaLevel("Contract Killer", 2500),
+            new NinjaLevel("Leader Ninja", 4000),
+            new NinjaLevel("World Ruling Ninja", 7000),
+            new NinjaLevel("Milky Way Ninja", 10000),
+            new NinjaLevel("NIJNA", 125000),
             new NinjaLevel("God, None Can Oppose.", int.MaxValue),
             new NinjaLevel("Reverse Punching Bag", int.MaxValue),
         };

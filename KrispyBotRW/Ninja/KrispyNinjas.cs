@@ -45,6 +45,15 @@ namespace KrispyBotRW.Ninja {
             formatter.Serialize(fs, saveProfiles);
             fs.Close();
         }
+
+        [Command("nj-prestige")]
+        public async Task NinjaPrestige() {
+            var profile = NinjaProfile.GetOrCreate(Context.User.Id);
+            var result = profile.Prestige();
+            if (result == 0) await ReplyAsync("Pfft... level up a bit!");
+            else await ReplyAsync("You have obtained " + result + " prestige token(s)! " +
+                                  "You feel like you are able to learn faster now...");
+        }
         
         [Command("nj-load")]
         public async Task NinjaLoad() {

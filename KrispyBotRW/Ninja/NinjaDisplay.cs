@@ -17,6 +17,7 @@ namespace KrispyBotRW.Ninja {
 
         private bool HasHealthBarValues;
         private int ChallengerHP, DefenderHP, ChallengerMaxHP, DefenderMaxHP;
+        private int ChallengerExpGained, DefenderExpGained;
         public void WithHealthBar(int challengerHP, int defenderHP, int challengerMaxHP, int defenderMaxHP) {
             ShowHealthBar = true;
             HasHealthBarValues = true;
@@ -72,6 +73,11 @@ namespace KrispyBotRW.Ninja {
                 participant == Participant.Defender ? ChallengerNN : DefenderNN));
         }
 
+        public void WithExpGained(int challengerXp, int defenderXp) {
+            ChallengerExpGained = challengerXp;
+            DefenderExpGained = defenderXp;
+        }
+
         public void WithDamage(Participant participant, int damage, int times = 1, int criticalTimes = 0) {
             string attacker = participant == Participant.Challenger ? ChallengerNN : DefenderNN,
                 defender = participant == Participant.Defender ? ChallengerNN : DefenderNN;
@@ -114,12 +120,16 @@ namespace KrispyBotRW.Ninja {
             }
             
             if (ShowKOMessage) {
+                var challengerXpMessage = ChallengerExpGained > 0 ? " (+" + ChallengerExpGained + " exp)" : "";
+                var defenderXpMessage = DefenderExpGained > 0 ? " (+" + DefenderExpGained + " exp)" : "";
                 if (ChallengerKO && DefenderKO)
                     builder.Append("You were both knocked out!\n");
                 else if (ChallengerKO)
-                    builder.Append("<@!" + Defender + ">! You have defeated <@!" + Challenger + ">!\n");
+                    builder.Append("<@!" + Defender + ">" + defenderXpMessage + "! " +
+                                   "You have defeated <@!" + Challenger + ">" + challengerXpMessage + "!\n");
                 else if (DefenderKO)
-                    builder.Append("<@!" + Challenger + ">! You have defeated <@!" + Defender + ">!\n");
+                    builder.Append("<@!" + Challenger + ">" + challengerXpMessage + "! " +
+                                   "You have defeated <@!" + Defender + ">" + defenderXpMessage + "!\n");
             }
             await Message.ModifyAsync(x => x.Content = builder.ToString());
         }
