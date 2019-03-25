@@ -15,7 +15,7 @@ namespace KrispyBotRW.Ninja {
 
         public static readonly NinjaSkillBase[] Skills = {
             new NinjaSkillBase("Dodge"), // A +5% chance to completely dodge an attack
-            new NinjaSkillBase("Critical"), // A 5% chance to deal twice as much damage
+            new NinjaSkillBase("Critical"), // A +5% chance to deal twice as much damage
             new NinjaSkillBase("Ambush"), // Start the battle with 5% less of the enemy health
             new NinjaSkillBase("Last Stand", 1), // Lets your ninja survive one more attack before dying
             new NinjaSkillBase("Resist"), // Your ninja takes 1 less damage every turn
@@ -32,9 +32,15 @@ namespace KrispyBotRW.Ninja {
         public int ExtraData;
 
         public string GetLevelText() {
-            var builder = new StringBuilder();
-            for (var a = 0; a < Level; a++) builder.Append("I");
-            return builder.ToString();
+            switch (Level) {
+                case 1: return "I";
+                case 2: return "II";
+                case 3: return "III";
+                case 4: return "IV";
+                case 5: return "V";
+                case 6: return "VI";
+                default: return "Unknown";
+            }
         }
 
         public NinjaSaveSkill CreateSaveSkill() {
@@ -67,7 +73,7 @@ namespace KrispyBotRW.Ninja {
             var baseSkill = NinjaSkillBase.Random();
             var skillLoc = CheckForSkill(baseSkill.Id);
             if (skillLoc == -1) { skillLoc = Count; Add(new NinjaSkill(baseSkill)); }
-            else if (this[skillLoc].Level <= 3) this[skillLoc].Level++;
+            else if (this[skillLoc].Level <= 5) this[skillLoc].Level++;
             return skillLoc;
         }
 

@@ -58,7 +58,7 @@ namespace KrispyBotRW.Ninja {
                 (didWin ? 8 : 3) *
                 Math.Max(opponentLevel - Level.Number, 0) * 5
                 + 2 * lengthOfBattle - MaxStamina, 5) + KrispyGenerator.NumberBetween(5, 25);
-            exp = (int)(exp * (1.0 + 0.01 * Tokens));
+            exp = (int)(exp * (1.0 + 0.1 * Tokens));
             IncreaseStats(exp / 10);
             ExpLevel += exp;
             CheckLevelIncreases(battleChannel);
@@ -74,7 +74,7 @@ namespace KrispyBotRW.Ninja {
             if (Level.Number == 0) return 0;
 
             // Create Tokens
-            var tokensEarned = (int) Math.Pow(2, Level.Number - 1);
+            var tokensEarned = Level.Number;
             Tokens += tokensEarned;
 
             // Reset Everything
