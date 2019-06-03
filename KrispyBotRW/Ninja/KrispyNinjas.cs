@@ -109,11 +109,9 @@ namespace KrispyBotRW.Ninja {
         public async Task NinjaHelp() {
             await ReplyAsync(KrispyLines.NinjaHelp);
         }
-
-        [Command("nj")]
-        public async Task Nj(SocketUser user) { await Ninja(user); }
         
         [Command("ninja")]
+        [Alias("nj")]
         public async Task Ninja(SocketUser user) {
             ulong challenger = Context.User.Id, defender = user.Id;
 

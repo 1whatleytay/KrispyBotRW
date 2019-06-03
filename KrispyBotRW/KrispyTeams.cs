@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -11,6 +12,8 @@ namespace KrispyBotRW {
             Green = 474735488692125716,
             Blue = 474735600415670273,
         }
+
+        private const ulong Anime = 584905858769747968;
         
         public static async Task RemoveTeamRoles(SocketGuild guild, IGuildUser user) {
             foreach (var team in Enum.GetValues(typeof(Teams)))
@@ -35,6 +38,18 @@ namespace KrispyBotRW {
         public async Task LeaveTeams() {
             await RemoveTeamRoles(Context.Guild, (IGuildUser)Context.User);
             await ReplyAsync("Yeah, you didn't need a team anyway.");
+        }
+
+        [Command("anime")]
+        public async Task JoinAnime() {
+            var guildUser = (IGuildUser) Context.User;
+            if (guildUser.RoleIds.Contains(Anime)) {
+                await guildUser.RemoveRoleAsync(Context.Guild.GetRole(Anime));
+                await ReplyAsync("Goodbye Anime :(");
+            } else {
+                await guildUser.AddRoleAsync(Context.Guild.GetRole(Anime));
+                await ReplyAsync("Welcome to Anime.");
+            }
         }
     }
 }
