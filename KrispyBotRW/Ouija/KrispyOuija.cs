@@ -41,7 +41,7 @@ namespace KrispyBotRW.Ouija {
             }
             
             public async Task AddCharacter(ulong by, char append) {
-                if (CanModify(by)) return;
+                if (!CanModify(by)) return;
 
                 if (append == '-') _response += ' ';
                 else _response += append;
