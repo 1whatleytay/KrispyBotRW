@@ -69,7 +69,7 @@ namespace KrispyBotRW.Ouija {
                 if (message.Content.Length == 1) {
                     await _openOuija.AddCharacter(message.Author.Id, message.Content[0]);
                 } else if (message.Content.ToLower().Contains("goodbye")) {
-                    if (_openOuija != null && _openOuija.CanModify(message.Author.Id)) {
+                    if (_openOuija != null) {
                         await message.Channel.SendMessageAsync(_openOuija.GetResult());
                         _openOuija = null;
                     }
