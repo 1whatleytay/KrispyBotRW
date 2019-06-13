@@ -10,6 +10,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 
 using KrispyBotRW.Ninja;
+using KrispyBotRW.Ouija;
 
 namespace KrispyBotRW {
     public class KrispyCommands : ModuleBase<SocketCommandContext> {
@@ -86,6 +87,7 @@ namespace KrispyBotRW {
 
         public static async Task MonitorMessages(SocketMessage msg) {
             await DadJokes(msg);
+            await KrispyOuija.CheckOuija((SocketUserMessage)msg);
             KrispyContributions.ProcessMessage(msg);
 
             if (msg.Channel.Id == 434090042408042506) {
