@@ -13,8 +13,10 @@ using Discord.Commands;
 namespace KrispyBotRW {
     public class KrispySchedule : ModuleBase<SocketCommandContext> {
         private enum ClassName : ulong {
+            AP = 619298658671919114,
             English = 487315578156220416,
-            Math = 487315641745932298,
+            Functions = 619269810500534272,
+            AdvancedFunctions = 619270065707286538,
             History = 487315862227779634,
             Science = 487319372428476417,
             Tech = 487319407920414720,
@@ -34,33 +36,61 @@ namespace KrispyBotRW {
         public static List<ulong> FindRoleIds(string text) {
             var roles = new List<ulong>();
             // I should come up with rules for this instead of a bunch of text.Contains...
-            if (text.Contains("math"))    roles.Add((ulong)ClassName.Math);
-            if (text.Contains("hist"))    roles.Add((ulong)ClassName.History);
-            if (text.Contains("sci"))     roles.Add((ulong)ClassName.Science);
-            if (text.Contains("tech"))    roles.Add((ulong)ClassName.Tech);
+            if (text.Contains("ap"))
+                roles.Add((ulong)ClassName.AP);
+            if (text.Contains("math") || text.Contains("functions")) {
+                if (text.Contains("g")) {
+                    if (text.Contains("11"))
+                        roles.Add((ulong)ClassName.Functions);
+                    if (text.Contains("12"))
+                        roles.Add((ulong)ClassName.AdvancedFunctions);
+                    if (!text.Contains("11") && !text.Contains("12"))
+                        roles.Add((ulong)ClassName.Functions);
+                } else if (text.Contains("adv"))
+                    roles.Add((ulong)ClassName.AdvancedFunctions);
+                else
+                    roles.Add((ulong)ClassName.Functions);
+            }
+            if (text.Contains("hist"))
+                roles.Add((ulong)ClassName.History);
+            if (text.Contains("sci"))
+                roles.Add((ulong)ClassName.Science);
+            if (text.Contains("tech"))
+                roles.Add((ulong)ClassName.Tech);
             if ((text.Contains("phys") ||
                  text.Contains("pys")) &&
                  text.Contains("ed") ||
-                 text.Contains("gym"))    roles.Add((ulong)ClassName.PhysEd);
+                 text.Contains("gym"))
+                roles.Add((ulong)ClassName.PhysEd);
             if ((text.Contains("phys") ||
                  text.Contains("pys")) &&
                  (!text.Contains("ed") ||
                  Regex.Matches(text, "phys").Count >= 2 ||
                  Regex.Matches(text, "pys").Count >= 2))
-                                                roles.Add((ulong)ClassName.Physics);
-            if (text.Contains("eng"))     roles.Add((ulong)ClassName.English);
-            if (text.Contains("french"))  roles.Add((ulong)ClassName.French);
-            if (text.Contains("string"))  roles.Add((ulong)ClassName.Strings);
-            if (text.Contains("food"))    roles.Add((ulong)ClassName.Foods);
+                roles.Add((ulong)ClassName.Physics);
+            if (text.Contains("eng"))
+                roles.Add((ulong)ClassName.English);
+            if (text.Contains("french"))
+                roles.Add((ulong)ClassName.French);
+            if (text.Contains("string"))
+                roles.Add((ulong)ClassName.Strings);
+            if (text.Contains("food"))
+                roles.Add((ulong)ClassName.Foods);
             if (text.Contains("civic") ||
-                text.Contains("career"))  roles.Add((ulong)ClassName.CivicsCareers);
+                text.Contains("career"))
+                roles.Add((ulong)ClassName.CivicsCareers);
             if (text.Contains("bu") &&
-                text.Contains("s"))       roles.Add((ulong)ClassName.Business);
-            if (text.Contains("bio"))     roles.Add((ulong)ClassName.Biology);
-            if (text.Contains("chem"))    roles.Add((ulong)ClassName.Chemistry);
+                text.Contains("s"))
+                roles.Add((ulong)ClassName.Business);
+            if (text.Contains("bio"))
+                roles.Add((ulong)ClassName.Biology);
+            if (text.Contains("chem"))
+                roles.Add((ulong)ClassName.Chemistry);
             if (text.Contains("art")) {
-                if (text.Contains("theatre") || text.Contains("drama")) roles.Add((ulong)ClassName.Drama);
-                else roles.Add((ulong)ClassName.VisualArts);
+                if (text.Contains("theatre") || text.Contains("drama"))
+                    roles.Add((ulong)ClassName.Drama);
+                else
+                    roles.Add((ulong)ClassName.VisualArts);
             }
             if (text.Contains("theatre") || text.Contains("drama"))
                 roles.Add((ulong)ClassName.Drama);

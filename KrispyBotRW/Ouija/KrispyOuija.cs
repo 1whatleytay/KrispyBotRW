@@ -17,7 +17,7 @@ namespace KrispyBotRW.Ouija {
             private RestUserMessage _message;
 
             private static string CreateQuestion(string question) {
-                return new Regex("[_]{1,}", RegexOptions.None).Replace(question, "{0}");
+                return new Regex("[_]{1,}", RegexOptions.None).Replace(question.Replace("*", ""), "{0}");
             }
 
             private string Begin() {
